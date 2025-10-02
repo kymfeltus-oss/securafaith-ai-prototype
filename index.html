@@ -1,0 +1,285 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "fontFamily": {
+        "inter": [
+          "Inter",
+          "sans-serif"
+        ]
+      },
+      "colors": {
+        "primary": "#3B82F6",
+        "primary-dark": "#9333EA",
+        "text-main": "#1E293B",
+        "slate-800": "#1E293B",
+        "slate-600": "#475569",
+        "slate-500": "#64748B",
+        "green": "#22C55E",
+        "red": "#EF4444",
+        "purple": "#9333EA",
+        "blue": "#3B82F6",
+        "yellow": "#FACC15",
+        "teal": "#14B8A6",
+        "pink": "#EC4899",
+        "indigo": "#6366F1"
+      }
+    }
+  }
+};</script>
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        * { font-family: 'Inter', sans-serif; }
+        
+        .animated-gradient {
+            background: linear-gradient(-45deg, #FFFFFF, #F8FAFC, #F1F5F9, #F8FAFC);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .floating-shape {
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .floating-shape:nth-child(2) {
+            animation-delay: -2s;
+        }
+        
+        .floating-shape:nth-child(3) {
+            animation-delay: -4s;
+        }
+        
+        .floating-shape:nth-child(4) {
+            animation-delay: -6s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
+            25% { transform: translateY(-20px) rotate(90deg); opacity: 0.2; }
+            50% { transform: translateY(-40px) rotate(180deg); opacity: 0.15; }
+            75% { transform: translateY(-20px) rotate(270deg); opacity: 0.25; }
+        }
+        
+        .bounce-gentle {
+            animation: bounceGentle 2s ease-in-out infinite;
+        }
+        
+        @keyframes bounceGentle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .scale-on-click {
+            transition: transform 0.2s ease;
+        }
+        
+        .scale-on-click:active {
+            transform: scale(0.95);
+        }
+        
+        .logo-glow {
+            filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.3));
+        }
+        
+        .text-shadow {
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .animate-slide-left {
+            animation: slideInLeft 1.2s ease-out forwards;
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+        
+        .animate-slide-right {
+            animation: slideInRight 1.2s ease-out 0.3s forwards;
+            opacity: 0;
+            transform: translateX(100px);
+        }
+        
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body>
+    <div id="splash-container" class="animated-gradient relative min-h-screen overflow-hidden flex flex-col items-center justify-center">
+        
+        <div class="floating-shape absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full blur-xl opacity-20"></div>
+        <div class="floating-shape absolute top-40 right-32 w-24 h-24 bg-gradient-to-br from-purple-600 to-blue-500 rounded-lg blur-xl opacity-30"></div>
+        <div class="floating-shape absolute bottom-32 left-1/4 w-28 h-28 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full blur-xl opacity-15"></div>
+        <div class="floating-shape absolute bottom-20 right-20 w-36 h-36 bg-gradient-to-br from-purple-600 to-blue-500 rounded-lg blur-xl opacity-20"></div>
+        
+        <div id="main-content" class="flex flex-col items-center justify-center space-y-12 z-10">
+            
+            <div id="logo-section" class="flex flex-col items-center space-y-8">
+                <div class="logo-glow animate-slide-left">
+                    <svg width="200" height="200" viewBox="0 0 200 200" class="drop-shadow-lg">
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1"></stop>
+                                <stop offset="100%" style="stop-color:#9333EA;stop-opacity:1"></stop>
+                            </linearGradient>
+                        </defs>
+                        
+                        <path d="M100 20 L160 60 L160 140 L100 180 L40 140 L40 60 Z" fill="url(#logoGradient)" stroke="white" stroke-width="3"></path>
+                        
+                        <rect x="90" y="60" width="20" height="80" fill="white" rx="2"></rect>
+                        <rect x="70" y="80" width="60" height="20" fill="white" rx="2"></rect>
+                        
+                        <circle cx="100" cy="45" r="8" fill="white"></circle>
+                        <circle cx="100" cy="155" r="6" fill="white" opacity="0.8"></circle>
+                    </svg>
+                </div>
+                
+                <div class="text-center space-y-6 animate-slide-right">
+                    <h1 class="text-6xl font-bold text-slate-800 tracking-[0.2em] text-shadow">
+                        SecuraFAITH-AI
+                    </h1>
+                    
+                    <div class="w-32 h-px bg-gradient-to-r from-transparent via-blue-500 via-purple-600 to-transparent mx-auto"></div>
+                    
+                    <p class="text-2xl font-normal text-slate-600 tracking-[0.15em] text-shadow">
+                        <span id="rotating-text" class="inline-block">First AI-Powered ERP System for Ministries &amp; Churches</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div id="cta-section" class="mt-16">
+                <button class="scale-on-click group relative px-16 py-6 text-white text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-r from-primary to-primary-dark">
+                    <span class="relative z-10 tracking-wide">Enter</span>
+                    <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 rounded-full transition-opacity duration-300"></div>
+                </button>
+            </div>
+        </div>
+        
+        <div id="scroll-indicator" class="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+            <div class="bounce-gentle">
+                <i class="fa-solid fa-chevron-down text-gray-400 text-2xl"></i>
+            </div>
+        </div>
+        
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-50/20 via-transparent to-slate-100/30 pointer-events-none"></div>
+    </div>
+
+       <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const enterButton = document.querySelector('#cta-section button');
+    const logo = document.querySelector('svg');
+    const shapes = document.querySelectorAll('.floating-shape');
+    const rotatingText = document.getElementById('rotating-text');
+
+    // Hover animation on logo
+    enterButton.addEventListener('mouseenter', function() {
+        logo.style.transform = 'scale(1.05)';
+        logo.style.transition = 'transform 0.3s ease';
+    });
+    enterButton.addEventListener('mouseleave', function() {
+        logo.style.transform = 'scale(1)';
+    });
+
+    // Enter button click → animation + redirect to login.html
+    enterButton.addEventListener('click', function() {
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+            window.location.href = "login.html"; // redirects to login page
+        }, 150);
+    });
+
+    // Floating shapes animation delays
+    shapes.forEach((shape, index) => {
+        shape.style.animationDelay = `-${index * 2}s`;
+    });
+
+    // Rotating tagline phrases
+    const phrases = [
+        "First AI-Powered ERP System for Ministries & Churches",
+        "Smart Ministry Management Solutions",
+        "AI-Driven Church Administration Platform",
+        "Intelligent Faith-Based ERP Technology",
+        "Next-Gen Religious Organization Software"
+    ];
+    let currentPhraseIndex = 0;
+
+    function typeWriter(text, callback) {
+        rotatingText.textContent = '';
+        let i = 0;
+        const typing = setInterval(() => {
+            if (i < text.length) {
+                rotatingText.textContent += text.charAt(i);
+                i++;
+            } else {
+                clearInterval(typing);
+                setTimeout(callback, 2000);
+            }
+        }, 50);
+    }
+    function eraseText(callback) {
+        const currentText = rotatingText.textContent;
+        let i = currentText.length;
+        const erasing = setInterval(() => {
+            if (i > 0) {
+                rotatingText.textContent = currentText.substring(0, i - 1);
+                i--;
+            } else {
+                clearInterval(erasing);
+                setTimeout(callback, 300);
+            }
+        }, 30);
+    }
+    function rotateText() {
+        eraseText(() => {
+            currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
+            typeWriter(phrases[currentPhraseIndex], rotateText);
+        });
+    }
+    setTimeout(() => {
+        rotateText();
+    }, 3000);
+});
+    </script>
+</body>
+</html>
+
