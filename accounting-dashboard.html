@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Plus Jakarta Sans', 'Manrope', 'ui-sans-serif', 'system-ui'],
+                    },
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#9333EA',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+</head>
+<body class="font-sans bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100">
+
+    <!-- Header -->
+    <header id="header" class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-2xl font-bold text-primary">Accounting & Stewardship</h1>
+                    <div class="flex space-x-2">
+                        <span id="user-badge" class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full text-sm font-medium">User: John Smith</span>
+                        <span id="church-badge" class="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-200 rounded-full text-sm font-medium">Church: Grace Community</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button id="period-switcher" class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+                        <i class="fa-solid fa-calendar mr-2"></i>
+                        <span>December 2024</span>
+                        <i class="fa-solid fa-chevron-down ml-2"></i>
+                    </button>
+                    
+                    <button id="new-action-btn" class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-blue-600 transition-colors">
+                        <i class="fa-solid fa-plus mr-2"></i>
+                        New
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Global Filters -->
+    <section id="global-filters" class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex flex-wrap gap-4">
+                <select class="px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                    <option>All Funds</option>
+                    <option>General Fund</option>
+                    <option>Building Fund</option>
+                    <option>Missions Fund</option>
+                </select>
+                
+                <select class="px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                    <option>All Campuses</option>
+                    <option>Main Campus</option>
+                    <option>North Campus</option>
+                    <option>Online</option>
+                </select>
+                
+                <select class="px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                    <option>All Ministries</option>
+                    <option>Worship</option>
+                    <option>Children's Ministry</option>
+                    <option>Youth Ministry</option>
+                </select>
+                
+                <select class="px-3 py-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg text-sm">
+                    <option>All Categories</option>
+                    <option>Program</option>
+                    <option>Management & General</option>
+                    <option>Fundraising</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- KPI Strip -->
+    <section id="kpi-strip" class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-slate-800 dark:to-slate-700 py-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-6 gap-6">
+                
+                <div id="kpi-cash" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all cursor-pointer">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                            <i class="fa-solid fa-coins text-blue-600 dark:text-blue-400"></i>
+                        </div>
+                        <span class="text-green-600 dark:text-green-400 text-sm font-medium">+2 days</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-slate-100">47</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Cash on Hand (Days)</p>
+                </div>
+
+                <div id="kpi-tithes" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all cursor-pointer">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                            <i class="fa-solid fa-hand-holding-heart text-green-600 dark:text-green-400"></i>
+                        </div>
+                        <span class="text-green-600 dark:text-green-400 text-sm font-medium">+8.2%</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-slate-100">$847K</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Tithes vs Plan</p>
+                </div>
+
+                <div id="kpi-restricted" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all cursor-pointer">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                            <i class="fa-solid fa-shield-halved text-purple-600 dark:text-purple-400"></i>
+                        </div>
+                        <span class="text-orange-600 dark:text-orange-400 text-sm font-medium">92%</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-slate-100">$234K</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Restricted Assets</p>
+                </div>
+
+                <div id="kpi-budget" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all cursor-pointer">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                            <i class="fa-solid fa-chart-line text-yellow-600 dark:text-yellow-400"></i>
+                        </div>
+                        <span class="text-red-600 dark:text-red-400 text-sm font-medium">-3.1%</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-slate-100">78%</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Budget Burn</p>
+                </div>
+
+                <div id="kpi-ap" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all cursor-pointer">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                            <i class="fa-solid fa-clock text-red-600 dark:text-red-400"></i>
+                        </div>
+                        <span class="text-red-600 dark:text-red-400 text-sm font-medium">$12K overdue</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-slate-100">$89K</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">AP Aging</p>
+                </div>
+
+                <div id="kpi-exceptions" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg hover:shadow-xl transition-all cursor-pointer">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
+                            <i class="fa-solid fa-exclamation-triangle text-orange-600 dark:text-orange-400"></i>
+                        </div>
+                        <span class="text-orange-600 dark:text-orange-400 text-sm font-medium">4 missing receipts</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-900 dark:text-slate-100">12</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">Exceptions</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Dashboard -->
+    <main id="main-dashboard" class="max-w-7xl mx-auto px-6 py-8">
+        <div class="grid grid-cols-3 gap-8">
+            
+            <!-- Budget vs Actual -->
+            <div id="budget-vs-actual-card" class="col-span-2 bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Budget vs Actual</h2>
+                    <button class="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
+                        <i class="fa-solid fa-ellipsis-h"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                            <span class="font-medium">General Fund</span>
+                        </div>
+                        <div class="flex items-center space-x-6 text-sm">
+                            <span class="text-slate-600 dark:text-slate-400">Budget: $1.2M</span>
+                            <span class="text-slate-600 dark:text-slate-400">Actual: $934K</span>
+                            <span class="text-green-600 dark:text-green-400 font-medium">Available: $186K</span>
+                        </div>
+                    </div>
+                    
+                    <div class="ml-6 space-y-3">
+                        <div class="flex items-center justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg cursor-pointer">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                                <span>Main Campus</span>
+                            </div>
+                            <div class="flex items-center space-x-6 text-sm">
+                                <span class="text-slate-600 dark:text-slate-400">$800K</span>
+                                <span class="text-slate-600 dark:text-slate-400">$612K</span>
+                                <span class="text-green-600 dark:text-green-400">$134K</span>
+                            </div>
+                        </div>
+                        
+                        <div class="ml-6 space-y-2">
+                            <div class="flex items-center justify-between p-2 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg cursor-pointer text-sm">
+                                <span class="text-slate-600 dark:text-slate-400">Worship Ministry</span>
+                                <div class="flex items-center space-x-4">
+                                    <span>$45K</span>
+                                    <span>$38K</span>
+                                    <span class="text-green-600 dark:text-green-400">$7K</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-2 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg cursor-pointer text-sm">
+                                <span class="text-slate-600 dark:text-slate-400">Children's Ministry</span>
+                                <div class="flex items-center space-x-4">
+                                    <span>$32K</span>
+                                    <span>$29K</span>
+                                    <span class="text-green-600 dark:text-green-400">$3K</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Restricted Funds Rollforward -->
+            <div id="restricted-rollforward-card" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Restricted Rollforward</h2>
+                    <button class="px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg text-sm font-medium hover:bg-purple-200 dark:hover:bg-purple-900/50">
+                        Post Release
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-600 dark:text-slate-400">Beginning Balance</span>
+                        <span class="font-semibold">$198K</span>
+                    </div>
+                    <div class="flex justify-between items-center text-green-600 dark:text-green-400">
+                        <span>+ Donations</span>
+                        <span class="font-semibold">+$67K</span>
+                    </div>
+                    <div class="flex justify-between items-center text-red-600 dark:text-red-400">
+                        <span>- Releases</span>
+                        <span class="font-semibold">-$31K</span>
+                    </div>
+                    <div class="border-t border-slate-200 dark:border-slate-700 pt-3">
+                        <div class="flex justify-between items-center font-bold text-lg">
+                            <span>Ending Balance</span>
+                            <span class="text-purple-600 dark:text-purple-400">$234K</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <p class="text-sm text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20 p-3 rounded-lg">
+                        <i class="fa-solid fa-info-circle mr-2"></i>
+                        Benevolence fund at 92% utilization—plan a release or pace the spend.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Expense Tracker -->
+            <div id="expense-tracker-card" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Expense Tracker</h2>
+                    <button class="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </button>
+                </div>
+                
+                <div id="expense-bar-chart" class="h-48 mb-6"></div>
+                
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                            <span class="text-sm">Facilities</span>
+                        </div>
+                        <span class="text-sm font-medium">$45K</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span class="text-sm">Technology</span>
+                        </div>
+                        <span class="text-sm font-medium">$32K</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+                            <span class="text-sm">Ministry Supplies</span>
+                        </div>
+                        <span class="text-sm font-medium">$28K</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transactions Feed -->
+            <div id="transactions-feed-card" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Recent Transactions</h2>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg text-sm">
+                            4 Need Review
+                        </button>
+                        <button class="text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
+                            <i class="fa-solid fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg cursor-pointer">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-check text-green-600 dark:text-green-400 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-sm">Office Depot</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Ministry Supplies</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-medium text-sm">$89.45</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Dec 15</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg cursor-pointer border-l-4 border-orange-400">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-exclamation text-orange-600 dark:text-orange-400 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-sm">Amazon</p>
+                                <p class="text-xs text-orange-600 dark:text-orange-400">Missing receipt</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-medium text-sm">$156.78</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Dec 14</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg cursor-pointer">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-clock text-blue-600 dark:text-blue-400 text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-sm">Electricity Bill</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Pending approval</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-medium text-sm">$1,245.67</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Dec 13</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Month-End Close -->
+            <div id="month-end-close-card" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-6 border border-slate-100 dark:border-slate-700 shadow-lg">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Month-End Close</h2>
+                    <span class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg text-sm font-medium">
+                        Dec 2024
+                    </span>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-check-circle text-green-600 dark:text-green-400"></i>
+                            <span class="text-sm">Bank Reconciliation</span>
+                        </div>
+                        <span class="text-xs text-green-600 dark:text-green-400">Complete</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-solid fa-clock text-yellow-600 dark:text-yellow-400"></i>
+                            <span class="text-sm">AP Accruals</span>
+                        </div>
+                        <span class="text-xs text-yellow-600 dark:text-yellow-400">In Progress</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-regular fa-circle text-slate-400"></i>
+                            <span class="text-sm">Fixed Assets</span>
+                        </div>
+                        <span class="text-xs text-slate-500 dark:text-slate-400">Pending</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between p-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <i class="fa-regular fa-circle text-slate-400"></i>
+                            <span class="text-sm">Period Lock</span>
+                        </div>
+                        <span class="text-xs text-slate-500 dark:text-slate-400">Due Dec 31</span>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-slate-600 dark:text-slate-400">Progress</span>
+                        <span class="text-sm font-medium">25%</span>
+                    </div>
+                    <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2 mt-2">
+                        <div class="bg-blue-600 h-2 rounded-full" style="width: 25%"></div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Sassy Message -->
+        <div id="sassy-message" class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-6 border border-slate-100 dark:border-slate-700">
+            <div class="flex items-center space-x-4">
+                <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+                    <i class="fa-solid fa-lightbulb text-blue-600 dark:text-blue-400 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-slate-900 dark:text-slate-100 mb-1">Cash runway: 47 days. Multiply loaves—or approve the PO.</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm">We found 4 receipts MIA. Let's collect those halos and keep the books clean.</p>
+                </div>
+            </div>
+        
+<script>
+// Expense Bar Chart
+document.addEventListener('DOMContentLoaded', function() {
+    Highcharts.chart('expense-bar-chart', {
+        chart: {
+            type: 'column',
+            backgroundColor: 'transparent',
+            height: 200
+        },
+        title: {
+            text: null
+        },
+        credits: {
+            enabled: false
+        },
+        xAxis: {
+            categories: ['Facilities', 'Technology', 'Ministry Supplies', 'Administration', 'Outreach'],
+            labels: {
+                style: {
+                    color: '#64748b',
+                    fontSize: '12px'
+                }
+            },
+            lineColor: '#e2e8f0',
+            tickColor: '#e2e8f0'
+        },
+        yAxis: {
+            title: {
+                text: null
+            },
+            labels: {
+                style: {
+                    color: '#64748b',
+                    fontSize: '12px'
+                },
+                formatter: function() {
+                    return '$' + (this.value / 1000) + 'K';
+                }
+            },
+            gridLineColor: '#f1f5f9'
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            column: {
+                borderRadius: 4,
+                pointPadding: 0.1,
+                groupPadding: 0.1
+            }
+        },
+        series: [{
+            name: 'Expenses',
+            data: [45000, 32000, 28000, 18000, 12000],
+            color: '#3B82F6'
+        }],
+        tooltip: {
+            formatter: function() {
+                return '<b>' + this.x + '</b><br/>$' + (this.y / 1000) + 'K';
+            }
+        }
+    });
+});
+</script>
+
+</body>
+</html>

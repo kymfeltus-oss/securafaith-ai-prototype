@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script src="https://code.highcharts.com/modules/solid-gauge.js"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        * { font-family: 'Inter', sans-serif; }
+        .glass-card { backdrop-filter: blur(10px); }
+        .glow-hover:hover { box-shadow: 0 0 20px rgba(124, 58, 237, 0.3); }
+        .sparkline { width: 60px; height: 20px; }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563EB',
+                        secondary: '#7C3AED',
+                        accent: '#06B6D4'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-slate-50 to-indigo-50 min-h-screen">
+    
+    <!-- Header -->
+    <header id="header" class="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-chart-line text-white text-sm"></i>
+                        </div>
+                        <h1 class="text-xl font-bold text-gray-900">Reports & Forecasting Hub</h1>
+                    </div>
+                    <button class="px-3 py-1 text-sm text-primary hover:bg-primary/10 rounded-md transition-colors">
+                        <i class="fa-solid fa-arrow-left mr-2"></i>Back to Dashboard
+                    </button>
+                </div>
+                
+                <div class="flex-1 max-w-lg mx-8">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center">
+                            <i class="fa-solid fa-robot text-secondary"></i>
+                        </div>
+                        <input type="text" placeholder="Ask AI: Generate donor report for Q3 by fund" 
+                               class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors">
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <select class="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20">
+                        <option>This Quarter</option>
+                        <option>Last Quarter</option>
+                        <option>YTD</option>
+                    </select>
+                    <select class="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20">
+                        <option>All Funds</option>
+                        <option>General Fund</option>
+                        <option>Building Fund</option>
+                    </select>
+                    <button class="px-3 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors text-sm">
+                        <i class="fa-solid fa-download mr-2"></i>Export
+                    </button>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-gray-600">Grace Community Church</span>
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" 
+                             class="w-8 h-8 rounded-full">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- KPI Strip -->
+    <section id="kpi-strip" class="max-w-7xl mx-auto px-6 py-6">
+        <div class="grid grid-cols-6 gap-4">
+            <div class="bg-white rounded-xl p-4 shadow-sm glow-hover transition-all duration-200 cursor-pointer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Total Giving</p>
+                        <p class="text-xl font-bold text-gray-900 tabular-nums">$127,500</p>
+                        <p class="text-xs text-green-600">+12.5%</p>
+                    </div>
+                    <div class="sparkline bg-green-100 rounded"></div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 shadow-sm glow-hover transition-all duration-200 cursor-pointer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Expenses</p>
+                        <p class="text-xl font-bold text-gray-900 tabular-nums">$89,200</p>
+                        <p class="text-xs text-red-600">+3.2%</p>
+                    </div>
+                    <div class="sparkline bg-red-100 rounded"></div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 shadow-sm glow-hover transition-all duration-200 cursor-pointer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Net by Fund</p>
+                        <p class="text-xl font-bold text-gray-900 tabular-nums">$38,300</p>
+                        <p class="text-xs text-green-600">+18.7%</p>
+                    </div>
+                    <div class="sparkline bg-blue-100 rounded"></div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 shadow-sm glow-hover transition-all duration-200 cursor-pointer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Forecast Delta</p>
+                        <p class="text-xl font-bold text-gray-900 tabular-nums">+$12,100</p>
+                        <p class="text-xs text-green-600">90 days</p>
+                    </div>
+                    <div class="sparkline bg-purple-100 rounded"></div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 shadow-sm glow-hover transition-all duration-200 cursor-pointer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Report Runs</p>
+                        <p class="text-xl font-bold text-gray-900 tabular-nums">24</p>
+                        <p class="text-xs text-gray-600">Last 7d</p>
+                    </div>
+                    <div class="sparkline bg-gray-100 rounded"></div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl p-4 shadow-sm glow-hover transition-all duration-200 cursor-pointer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Confidence</p>
+                        <p class="text-xl font-bold text-gray-900 tabular-nums">87%</p>
+                        <p class="text-xs text-green-600">High</p>
+                    </div>
+                    <div id="confidence-gauge" class="w-12 h-12"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 pb-8">
+        <div class="grid grid-cols-2 gap-8">
+            
+            <!-- Reports Library -->
+            <section id="reports-library" class="space-y-6">
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Standard Reports</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        
+                        <div class="border border-gray-200 rounded-lg p-4 glow-hover transition-all duration-200 cursor-pointer">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-file-invoice-dollar text-blue-600"></i>
+                                </div>
+                                <h3 class="font-medium text-gray-900">Income Statement</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Revenue and expenses by fund</p>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 bg-primary text-white rounded text-xs hover:bg-primary/90">Run</button>
+                                <button class="px-3 py-1 border border-gray-200 rounded text-xs hover:bg-gray-50">Export</button>
+                                <button class="px-3 py-1 border border-gray-200 rounded text-xs hover:bg-gray-50">Schedule</button>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-lg p-4 glow-hover transition-all duration-200 cursor-pointer">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-balance-scale text-green-600"></i>
+                                </div>
+                                <h3 class="font-medium text-gray-900">Balance Sheet</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Assets, liabilities & equity</p>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 bg-primary text-white rounded text-xs hover:bg-primary/90">Run</button>
+                                <button class="px-3 py-1 border border-gray-200 rounded text-xs hover:bg-gray-50">Export</button>
+                                <button class="px-3 py-1 border border-gray-200 rounded text-xs hover:bg-gray-50">Schedule</button>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-lg p-4 glow-hover transition-all duration-200 cursor-pointer">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-hand-holding-dollar text-purple-600"></i>
+                                </div>
+                                <h3 class="font-medium text-gray-900">Donations by Fund</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Giving patterns & trends</p>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 bg-primary text-white rounded text-xs hover:bg-primary/90">Run</button>
+                                <button class="px-3 py-1 border border-gray-200 rounded text-xs hover:bg-gray-50">Export</button>
+                                <button class="px-3 py-1 border border-gray-200 rounded text-xs hover:bg-gray-50">Schedule</button>
+                            </div>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-lg p-4 glow-hover transition-all duration-200 cursor-pointer">
+                            <div class="flex items-center space-x-3 mb-3">
+                                <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-chart-pie text-red-600"></i>
+                                </div>
+                                <h3 class="font-medium text-gray-900">Budget vs Actual</h3>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-3">Variance analysis</p>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 bg-primary text-white rounded text-xs hover:bg-primary/90">Run</button>
+                                <button class="px-3 py-1 border border-gray-200 rounded text-xs hover:bg-gray-50">Export</button>
+                                <button class="px-3 py-1 border border-gray-200 rounded text-xs hover:bg-gray-50">Schedule</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Custom Reports -->
+                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-100">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-robot text-white"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900">AI Customizable Reports</h2>
+                    </div>
+                    
+                    <div class="space-y-3 mb-4">
+                        <div class="bg-white/60 rounded-lg p-3 text-sm text-gray-700 cursor-pointer hover:bg-white/80 transition-colors">
+                            "Show donor growth for the last 18 months, grouped by campaign, as a pivot chart."
+                        </div>
+                        <div class="bg-white/60 rounded-lg p-3 text-sm text-gray-700 cursor-pointer hover:bg-white/80 transition-colors">
+                            "Create a budget vs actual report for Youth Ministry Q1, highlight variances >10%."
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <input type="text" placeholder="Describe your custom report..." 
+                               class="flex-1 px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20">
+                        <button class="px-4 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-lg hover:opacity-90 transition-opacity">
+                            <i class="fa-solid fa-sparkles mr-2"></i>Generate
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent & Scheduled -->
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-900">Recent & Scheduled</h2>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded text-sm">Recent</button>
+                            <button class="px-3 py-1 text-gray-500 rounded text-sm hover:bg-gray-100">Scheduled</button>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 border border-gray-100 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">PDF</span>
+                                <div>
+                                    <p class="font-medium text-sm">Income Statement Q3</p>
+                                    <p class="text-xs text-gray-500">2 hours ago</p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 border border-gray-100 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs">CSV</span>
+                                <div>
+                                    <p class="font-medium text-sm">Donations by Fund</p>
+                                    <p class="text-xs text-gray-500">Yesterday</p>
+                                </div>
+                            </div>
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="fa-solid fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Forecasting Studio -->
+            <section id="forecasting-studio" class="space-y-6">
+                
+                <!-- Scenario Overview -->
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Forecast Scenarios</h2>
+                    <div class="grid grid-cols-3 gap-4">
+                        
+                        <div class="border border-gray-200 rounded-lg p-4 glow-hover transition-all duration-200 cursor-pointer">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-medium text-gray-900">Conservative</h3>
+                                <div id="conservative-confidence" class="w-8 h-8"></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Giving</span>
+                                    <span class="text-sm font-medium tabular-nums">$142K</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Expenses</span>
+                                    <span class="text-sm font-medium tabular-nums">$98K</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Net</span>
+                                    <span class="text-sm font-medium text-green-600 tabular-nums">+$44K</span>
+                                </div>
+                            </div>
+                            <div id="conservative-chart" class="h-16 mt-3"></div>
+                        </div>
+                        
+                        <div class="border-2 border-primary rounded-lg p-4 bg-primary/5 glow-hover transition-all duration-200 cursor-pointer">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-medium text-gray-900">Base</h3>
+                                <div id="base-confidence" class="w-8 h-8"></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Giving</span>
+                                    <span class="text-sm font-medium tabular-nums">$158K</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Expenses</span>
+                                    <span class="text-sm font-medium tabular-nums">$103K</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Net</span>
+                                    <span class="text-sm font-medium text-green-600 tabular-nums">+$55K</span>
+                                </div>
+                            </div>
+                            <div id="base-chart" class="h-16 mt-3"></div>
+                        </div>
+                        
+                        <div class="border border-gray-200 rounded-lg p-4 glow-hover transition-all duration-200 cursor-pointer">
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="font-medium text-gray-900">Optimistic</h3>
+                                <div id="optimistic-confidence" class="w-8 h-8"></div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Giving</span>
+                                    <span class="text-sm font-medium tabular-nums">$174K</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Expenses</span>
+                                    <span class="text-sm font-medium tabular-nums">$108K</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Net</span>
+                                    <span class="text-sm font-medium text-green-600 tabular-nums">+$66K</span>
+                                </div>
+                            </div>
+                            <div id="optimistic-chart" class="h-16 mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario Controls -->
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Scenario Controls</h2>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Growth Rate</label>
+                                <div class="flex items-center space-x-3">
+                                    <input type="range" min="0" max="20" value="8" class="flex-1">
+                                    <span class="text-sm font-medium tabular-nums w-8">8%</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Campaign Lift</label>
+                                <div class="flex items-center space-x-3">
+                                    <input type="range" min="0" max="25" value="12" class="flex-1">
+                                    <span class="text-sm font-medium tabular-nums w-8">12%</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Expense Inflation</label>
+                                <div class="flex items-center space-x-3">
+                                    <input type="range" min="0" max="10" value="3" class="flex-1">
+                                    <span class="text-sm font-medium tabular-nums w-8">3%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <label class="text-sm font-medium text-gray-700">Seasonality</label>
+                                <button class="w-12 h-6 bg-primary rounded-full relative">
+                                    <div class="w-5 h-5 bg-white rounded-full absolute right-0.5 top-0.5"></div>
+                                </button>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Forecast Horizon</label>
+                                <select class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary/20">
+                                    <option>30 days</option>
+                                    <option>60 days</option>
+                                    <option selected>90 days</option>
+                                    <option>180 days</option>
+                                </select>
+                            </div>
+                            
+                            <button class="w-full px-4 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-lg hover:opacity-90 transition-opacity">
+                                <i class="fa-solid fa-calculator mr-2"></i>Recompute Forecast
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forecast Visualization -->
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-900">Forecast Visualization</h2>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 bg-primary text-white rounded text-sm">Area</button>
+                            <button class="px-3 py-1 text-gray-500 hover:bg-gray-100 rounded text-sm">Line</button>
+                            <button class="px-3 py-1 text-gray-500 hover:bg-gray-100 rounded text-sm">Waterfall</button>
+                        </div>
+                    </div>
+                    <div id="forecast-chart" class="h-64"></div>
+                </div>
+
+                <!-- What-If Actions -->
+                <div class="bg-white rounded-xl p-6 shadow-sm">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">What-If Scenarios</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors">
+                            <div class="font-medium text-sm">Easter Campaign</div>
+                            <div class="text-xs text-gray-600">+12% for 6 weeks</div>
+                        </button>
+                        <button class="p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors">
+                            <div class="font-medium text-sm">Facilities Cut</div>
+                            <div class="text-xs text-gray-600">-5% ongoing</div>
+                        </button>
+                        <button class="p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors">
+                            <div class="font-medium text-sm">Volunteer Hours</div>
+                            <div class="text-xs text-gray-600">+10% increase</div>
+                        </button>
+                        <button class="p-3 border border-gray-200 rounded-lg text-left hover:bg-gray-50 transition-colors">
+                            <div class="font-medium text-sm">New Campus</div>
+                            <div class="text-xs text-gray-600">Launch in Q2</div>
+                        </button>
+                    </div>
+                    
+                    <div class="flex space-x-3 mt-4">
+                        <button class="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i class="fa-solid fa-download mr-2"></i>Export Forecast
+                        </button>
+                        <button class="flex-1 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                            <i class="fa-solid fa-share mr-2"></i>Share Link
+                        </button>
+                        <button class="flex-1 px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                            <i class="fa-solid fa-arrow-up mr-2"></i>Promote to Budget
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+<script>
+(() => {
+  'use strict';
+
+  // Map visible button text → target page
+  const MAP_BY_TEXT = {
+    'add member':        'member-care.html',      // change to 'add-member.html' if you prefer the form page
+    'record donation':   'record-donation.html',
+    'log expense':       'log-expense.html',
+    'launch campaign':   'launch-campaign.html',
+    'generate report':   'generate-report.html',
+    'schedule event':    'schedule-event.html'
+  };
+
+  // Helper: go to route
+  const go = href => href && (location.href = href);
+
+  // Find Quick Action buttons robustly
+  function getQuickActionButtons() {
+    // Primary: inside #quick-actions
+    const scope = document.getElementById('quick-actions');
+    let nodes = scope
+      ? Array.from(scope.querySelectorAll('button, [role="button"], .card, .bg-white'))
+      : [];
+
+    // Fallback: look for a grid right after an H2 with "Quick Actions"
+    if (!nodes.length) {
+      const h2 = Array.from(document.querySelectorAll('h2'))
+        .find(el => (el.textContent || '').trim().toLowerCase().includes('quick actions'));
+      const grid = h2?.nextElementSibling;
+      if (grid) {
+        nodes = Array.from(grid.querySelectorAll('button, [role="button"], .card, .bg-white'));
+      }
+    }
+    // Filter to only tiles that contain one of our labels
+    return nodes.filter(el => {
+      const t = (el.textContent || '').toLowerCase();
+      return Object.keys(MAP_BY_TEXT).some(k => t.includes(k));
+    });
+  }
+
+  function wireQuickActions() {
+    const btns = getQuickActionButtons();
+    btns.forEach(el => {
+      // Prefer explicit data-route if you add it in markup; otherwise use label mapping
+      const label = (el.textContent || '').toLowerCase();
+      const matchKey = Object.keys(MAP_BY_TEXT).find(k => label.includes(k));
+      const target = el.dataset.route || MAP_BY_TEXT[matchKey];
+
+      // Make it obviously clickable
+      el.style.cursor = 'pointer';
+      el.setAttribute('tabindex', '0');
+
+      const handler = (e) => { e.preventDefault(); e.stopPropagation(); go(target); };
+
+      // Capture = true so we override any broken handlers upstream
+      el.addEventListener('click', handler, { capture: true });
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') handler(e);
+      }, { capture: true });
+    });
+
+    // Diagnostics in case something’s off
+    console.log('[SecuraFaith] Quick Actions wired:', btns.length);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', wireQuickActions);
+  } else {
+    wireQuickActions();
+  }
+})();
+</script>
+
+    <script>
+        // Initialize confidence gauges
+        function createConfidenceGauge(container, value, color) {
+            Highcharts.chart(container, {
+                chart: { type: 'solidgauge', height: 32, width: 32, backgroundColor: 'transparent' },
+                title: { text: null },
+                credits: { enabled: false

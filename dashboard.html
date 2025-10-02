@@ -1,0 +1,1447 @@
+<html><head>
+
+<style id="alive-css">
+button, .btn, a.button, [role="button"]{ transition: transform .2s ease, box-shadow .2s ease, filter .2s ease; }
+button:hover, .btn:hover, a.button:hover, [role="button"]:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 6px rgba(255,255,255,.35), 0 12px 30px rgba(99,102,241,.55);
+  filter: brightness(1.06) saturate(1.06);
+}
+.bg-white.rounded-2xl{ transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease; }
+.bg-white.rounded-2xl:hover{ transform: translateY(-4px); box-shadow: 0 18px 42px rgba(2,6,23,.16); border-color: rgba(99,102,241,.2); }
+.inv-reveal{ opacity:0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
+.inv-reveal.is-visible{ opacity:1; transform: translateY(0); }
+</style>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>tailwind.config = {
+  "theme": {
+    "extend": {
+      "colors": {
+        "sapphire": {
+          "50": "#f8faff",
+          "100": "#f0f5ff",
+          "500": "#3b82f6",
+          "600": "#2563eb",
+          "700": "#1d4ed8",
+          "800": "#1e40af"
+        },
+        "purple": {
+          "500": "#8b5cf6",
+          "600": "#7c3aed",
+          "700": "#6d28d9"
+        }
+      },
+      "fontFamily": {}
+    }
+  }
+};</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"><style>
+  .highlighted-section {
+    outline: 2px solid #3F20FB;
+    background-color: rgba(63, 32, 251, 0.1);
+  }
+
+  .edit-button {
+    position: absolute;
+    z-index: 1000;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  </style></head>
+<body class="bg-gray-50 min-h-screen">
+  <header id="header" class="fixed top-0 left-0 right-0 bg-white shadow-sm border-b border-gray-200 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      
+      <!-- Left side: user info -->
+      <div id="header-left" class="flex items-center space-x-4">
+        <img id="headerAvatar" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" 
+             class="w-10 h-10 rounded-full object-cover">
+        <div>
+          <p id="headerUserName" class="font-semibold text-gray-900"></p>
+          <p id="headerUserRole" class="text-sm text-gray-500"></p>
+        </div>
+      </div> 
+
+
+      <!-- Right side: church + logout -->
+      <div class="flex items-center space-x-4">
+        <div>
+          <h1 id="headerChurchName" class="font-bold text-xl text-gray-900"></h1>
+          <p class="text-sm text-gray-500">SecuraFaith-AI ERP System</p>
+        </div>
+        <button id="logoutBtn" 
+                class="flex items-center space-x-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+          <i class="fa-solid fa-church text-sapphire-600"></i>
+          <span id="logoutLabel">Logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // Prefer full user object
+    const stored = localStorage.getItem("currentUser");
+    const user = stored ? JSON.parse(stored) : {
+      fullName:  localStorage.getItem("userName")   || "Guest User",
+      role:      localStorage.getItem("userRole")   || "Role",
+      churchName:localStorage.getItem("churchName") || "Your Ministry",
+      avatar:    "https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg"
+    };
+
+    // Fill header
+    document.getElementById("headerUserName").textContent  = user.fullName || "Guest User";
+    document.getElementById("headerUserRole").textContent  = user.role || "Role";
+    document.getElementById("headerChurchName").textContent= user.churchName || "Your Ministry";
+
+    // Avatar if provided
+    if (user.avatar) {
+      const img = document.getElementById("headerAvatar");
+      if (img) img.src = user.avatar;
+    }
+
+    // Logout label shows church name
+    document.getElementById("logoutLabel").textContent = user.churchName || "Logout";
+
+    // Logout action
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.clear();
+      window.location.href = "login.html";
+    });
+  });
+  </script>
+
+            
+            <div id="header-right" class="flex items-center space-x-4">
+                <button class="relative p-2 text-gray-600 hover:text-sapphire-600 transition-colors">
+                    <i class="fa-solid fa-bell text-lg"></i>
+                    <span class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">3</span>
+                </button>
+                <button class="p-2 text-gray-600 hover:text-sapphire-600 transition-colors">
+                    <i class="fa-solid fa-gear text-lg"></i>
+                </button>
+                <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors">
+                    <i class="fa-solid fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20 pb-8">
+        <section id="hero-section" class="max-w-7xl mx-auto px-6 py-12">
+  <div class="text-center mb-8">
+    <h1 class="text-5xl font-bold text-gray-900 mb-4">
+      Empowering Ministries with 
+      <span class="bg-gradient-to-r from-sapphire-600 to-purple-600 bg-clip-text text-transparent">
+       AI-Driven &amp; Processing
+      </span>
+    </h1>
+    <p class="text-xl text-gray-600 mb-8">All of your ministry operations in one place</p>
+    
+    <!-- ✅ Keep only the Robot AI Command Bar -->
+    <section id="ai-command-bar" class="max-w-4xl mx-auto px-6 mt-6">
+      <div class="bg-white shadow-lg rounded-2xl p-4 flex items-center space-x-3 border border-gray-200">
+        <i class="fa-solid fa-robot text-sapphire-600 text-2xl"></i>
+        <input id="aiCommandInput" type="text" 
+               placeholder="Ask AI: e.g., 'Record $200 donation for John Smith'" 
+               class="flex-1 px-4 py-2 rounded-xl border border-gray-300 focus:border-sapphire-500 focus:outline-none text-gray-700">
+        <button id="aiCommandBtn" 
+                class="px-6 py-2 bg-gradient-to-r from-sapphire-600 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg transition">
+          Run
+        </button>
+      </div>
+    </section>
+ 
+
+
+        </section>
+
+        <section id="kpi-section" class="max-w-7xl mx-auto px-6 mb-12">
+            <div class="grid grid-cols-5 gap-6">
+                <div id="donations-kpi" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-hand-holding-heart text-green-600 text-xl"></i>
+                        </div>
+                        <span class="text-green-600 text-sm font-medium">+12%</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">$24,850</h3>
+                    <p class="text-gray-600">Donations This Month</p>
+                </div>
+
+                <div id="expenses-kpi" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-receipt text-red-600 text-xl"></i>
+                        </div>
+                        <span class="text-red-600 text-sm font-medium">-5%</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">$18,200</h3>
+                    <p class="text-gray-600">Monthly Expenses</p>
+                </div>
+
+                <div id="attendance-kpi" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-users text-blue-600 text-xl"></i>
+                        </div>
+                        <span class="text-blue-600 text-sm font-medium">87%</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">342</h3>
+                    <p class="text-gray-600">Average Attendance</p>
+                </div>
+
+                <div id="volunteers-kpi" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-hands-helping text-purple-600 text-xl"></i>
+                        </div>
+                        <span class="text-purple-600 text-sm font-medium">24</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">68</h3>
+                    <p class="text-gray-600">Active Volunteers</p>
+                </div>
+
+                <div id="impact-kpi" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                            <i class="fa-solid fa-globe text-orange-600 text-xl"></i>
+                        </div>
+                        <span class="text-orange-600 text-sm font-medium">+18%</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-1">1,240</h3>
+                    <p class="text-gray-600">Lives Impacted</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="max-w-7xl mx-auto px-6 flex gap-8">
+            <section id="module-hub" class="flex-1">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Ministry Modules</h2>
+                <div class="grid grid-cols-3 gap-6">
+                    <div id="member-care-card" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-br from-sapphire-500 to-purple-500 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-heart text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Member Care</h3>
+                        <p class="text-gray-600 text-sm">Profiles, attendance tracking, and discipleship management</p>
+                    </div>
+
+                    <div id="donations-card" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-donate text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Donations &amp; Giving</h3>
+                        <p class="text-gray-600 text-sm">Campaigns, pledges, and comprehensive giving reports</p>
+                    </div>
+
+                    <div id="accounting-card" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-calculator text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Accounting &amp; Stewardship</h3>
+                        <p class="text-gray-600 text-sm">Budget management, transactions, and expense tracking</p>
+                    </div>
+
+                    <div id="events-card" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-calendar-days text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Events &amp; Facilities</h3>
+                        <p class="text-gray-600 text-sm">Scheduling, room bookings, weddings, and special events</p>
+                    </div>
+
+                    <div id="volunteers-card" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-hands-helping text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Volunteer Management</h3>
+                        <p class="text-gray-600 text-sm">Scheduling, recognition, and volunteer coordination</p>
+                    </div>
+
+                    <div id="governance-card" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-br from-gray-600 to-gray-700 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-gavel text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Governance &amp; Oversight</h3>
+                        <p class="text-gray-600 text-sm">Board management, policies, and document storage</p>
+                    </div>
+
+                    <div id="missions-card" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-globe-americas text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Missions &amp; Outreach</h3>
+                        <p class="text-gray-600 text-sm">Mission trips, missionaries, and community impact tracking</p>
+                    </div>
+
+                    <div id="discipleship-card" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-amber-500 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-book-open text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Discipleship Pathways</h3>
+                        <p class="text-gray-600 text-sm">Classes, training programs, baptisms, and growth tracking</p>
+                    </div>
+
+                    <div id="reports-card" class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all cursor-pointer border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center mb-4">
+                            <i class="fa-solid fa-chart-line text-white text-xl"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Reports &amp; Forecasting</h3>
+                        <p class="text-gray-600 text-sm">Stewardship reports, analytics, and AI-powered projections</p>
+                    </div>
+                </div>
+            </section>
+
+            <aside id="ai-sidebar" class="w-80">
+                <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="w-10 h-10 bg-gradient-to-br from-sapphire-600 to-purple-600 rounded-xl flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-robot text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900">AI Ministry Insights</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-green-50 border border-green-200 rounded-xl cursor-pointer hover:bg-green-100 transition-colors">
+                            <div class="flex items-center mb-2">
+                                <i class="fa-solid fa-trending-up text-green-600 mr-2"></i>
+                                <span class="text-sm font-medium text-green-800">Giving Increase</span>
+                            </div>
+                            <p class="text-sm text-green-700">Donations are up 15% this month compared to last year</p>
+                        </div>
+                        
+                        <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-xl cursor-pointer hover:bg-yellow-100 transition-colors">
+                            <div class="flex items-center mb-2">
+                                <i class="fa-solid fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                                <span class="text-sm font-medium text-yellow-800">Attendance Alert</span>
+                            </div>
+                            <p class="text-sm text-yellow-700">Youth ministry attendance dipped 8% this week</p>
+                        </div>
+                        
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl cursor-pointer hover:bg-blue-100 transition-colors">
+                            <div class="flex items-center mb-2">
+                                <i class="fa-solid fa-calendar-check text-blue-600 mr-2"></i>
+                                <span class="text-sm font-medium text-blue-800">Upcoming Meeting</span>
+                            </div>
+                            <p class="text-sm text-blue-700">Board meeting scheduled in 7 days - agenda ready</p>
+                        </div>
+                        
+                        <div class="p-4 bg-purple-50 border border-purple-200 rounded-xl cursor-pointer hover:bg-purple-100 transition-colors">
+                            <div class="flex items-center mb-2">
+                                <i class="fa-solid fa-lightbulb text-purple-600 mr-2"></i>
+                                <span class="text-sm font-medium text-purple-800">AI Recommendation</span>
+                            </div>
+                            <p class="text-sm text-purple-700">Consider launching a digital giving campaign for Easter</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <section id="quick-actions" class="max-w-7xl mx-auto px-6 mt-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
+            <div class="grid grid-cols-6 gap-4">
+                <button class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-gray-100 text-center">
+                    <div class="w-12 h-12 bg-sapphire-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-solid fa-user-plus text-sapphire-600 text-xl"></i>
+                    </div>
+                    <p class="font-medium text-gray-900">Add Member</p>
+                </button>
+                
+                <button class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-gray-100 text-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-solid fa-hand-holding-dollar text-green-600 text-xl"></i>
+                    </div>
+                    <p class="font-medium text-gray-900">Record Donation</p>
+                </button>
+                
+                <button class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-gray-100 text-center">
+                    <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-solid fa-receipt text-red-600 text-xl"></i>
+                    </div>
+                    <p class="font-medium text-gray-900">Log Expense</p>
+                </button>
+                
+                <button class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-gray-100 text-center">
+                    <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-solid fa-bullhorn text-orange-600 text-xl"></i>
+                    </div>
+                    <p class="font-medium text-gray-900">Launch Campaign</p>
+                </button>
+                
+                <button class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-gray-100 text-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-solid fa-file-chart-line text-purple-600 text-xl"></i>
+                    </div>
+                    <p class="font-medium text-gray-900">Generate Report</p>
+                </button>
+                
+                <button class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all border border-gray-100 text-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-solid fa-calendar-plus text-blue-600 text-xl"></i>
+                    </div>
+                    <p class="font-medium text-gray-900">Schedule Event</p>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer" class="bg-white border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto px-6 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-8 h-8 bg-gradient-to-br from-sapphire-600 to-purple-600 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-church text-white text-sm"></i>
+                    </div>
+                    <p class="text-gray-600">© 2024 SecuraFaith ERP. Empowering ministries worldwide.</p>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <span class="text-gray-500 hover:text-sapphire-600 transition-colors cursor-pointer">Support</span>
+                    <span class="text-gray-500 hover:text-sapphire-600 transition-colors cursor-pointer">Documentation</span>
+                    <span class="text-gray-500 hover:text-sapphire-600 transition-colors cursor-pointer">Privacy</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+<script>
+  // Quick Action buttons
+  document.querySelector("#quick-actions button:nth-child(1)")
+    .onclick = () => window.location.href = "add-member.html";
+  document.querySelector("#quick-actions button:nth-child(2)")
+    .onclick = () => window.location.href = "record-donation.html";
+  document.querySelector("#quick-actions button:nth-child(3)")
+    .onclick = () => window.location.href = "log-expense.html";
+  document.querySelector("#quick-actions button:nth-child(4)")
+    .onclick = () => window.location.href = "launch-campaign.html";
+  document.querySelector("#quick-actions button:nth-child(5)")
+    .onclick = () => window.location.href = "generate-report.html";
+  document.querySelector("#quick-actions button:nth-child(6)")
+    .onclick = () => window.location.href = "schedule-event.html";
+
+  // Module Hub cards
+  document.querySelector("#member-care-card")
+    .onclick = () => window.location.href = "member-care.html";
+  document.querySelector("#donations-card")
+    .onclick = () => window.location.href = "donations-dashboard.html";
+  document.querySelector("#accounting-card")
+    .onclick = () => window.location.href = "accounting-dashboard.html";
+  document.querySelector("#events-card")
+    .onclick = () => window.location.href = "events-dashboard.html";
+  document.querySelector("#volunteers-card")
+    .onclick = () => window.location.href = "volunteer-dashboard.html";
+  document.querySelector("#governance-card")
+    .onclick = () => window.location.href = "governance-dashboard.html";
+  document.querySelector("#missions-card")
+    .onclick = () => window.location.href = "missions-dashboard.html";
+  document.querySelector("#discipleship-card")
+    .onclick = () => window.location.href = "discipleship-dashboard.html";
+  document.querySelector("#reports-card")
+    .onclick = () => window.location.href = "reports-hub.html";
+</script> <script>
+  const aiInput = document.getElementById('aiCommandInput');
+  const aiBtn = document.getElementById('aiCommandBtn');
+  const modal = document.getElementById('aiCommandModal');
+  const modalContent = document.getElementById('modalContent');
+  const closeBtn = document.getElementById('closeModalBtn');
+  const okBtn = document.getElementById('modalOkBtn');
+
+  aiBtn.addEventListener('click', () => {
+    const command = aiInput.value.trim();
+    if (!command) return;
+
+    // Example: record donation
+    let report = "";
+    if (command.toLowerCase().includes("donation")) {
+      report = `
+        <p><strong>Command:</strong> ${command}</p>
+        <p><strong>Status:</strong> Completed successfully ✅</p>
+        <p><strong>Details:</strong> Donation recorded in Donations Dashboard.</p>
+      `;
+    } else {
+      report = `
+        <p><strong>Command:</strong> ${command}</p>
+        <p><strong>Status:</strong> Processed ✅</p>
+        <p><strong>Details:</strong> Task has been simulated successfully.</p>
+      `;
+    }
+
+    modalContent.innerHTML = report;
+    modal.classList.remove('hidden');
+    aiInput.value = "";
+  });
+
+  // Close modal
+  [closeBtn, okBtn].forEach(btn => {
+    btn.addEventListener('click', () => modal.classList.add('hidden'));
+  });
+</script>
+<!-- AI Command Modal -->
+<!-- AI Command Bar -->
+<!-- ✅ Keep only ONE AI Command Bar -->
+<section id="ai-command-bar" class="max-w-4xl mx-auto px-6 mt-6">
+  <div class="bg-white shadow-lg rounded-2xl p-4 flex items-center space-x-3 border border-gray-200">
+    <i class="fa-solid fa-robot text-sapphire-600 text-2xl"></i>
+    <input id="aiCommandInput" type="text" 
+           placeholder="Ask AI: e.g., 'Record $200 donation for John Smith'" 
+           class="flex-1 px-4 py-2 rounded-xl border border-gray-300 focus:border-sapphire-500 focus:outline-none text-gray-700">
+    <button id="aiCommandBtn" 
+            class="px-6 py-2 bg-gradient-to-r from-sapphire-600 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg transition">
+      Run
+    </button>
+  </div>
+</section>
+
+<script>
+// --- AI Command Parser for Robot Bar ---
+const aiInput = document.getElementById("aiCommandInput");
+const aiBtn   = document.getElementById("aiCommandBtn");
+
+aiBtn.addEventListener("click", runAiCommand);
+aiInput.addEventListener("keypress", e => {
+  if (e.key === "Enter") runAiCommand();
+});
+
+function runAiCommand() {
+  const inputRaw = aiInput.value.trim();
+  const input = inputRaw.toLowerCase();
+  if (!input) return;
+
+  let url = null;
+
+  // --- Add Member ---
+  if (input.startsWith("add member") || input.startsWith("member ")) {
+    url = "add-member.html";
+    let name = input.replace(/add member|member/, "").trim();
+    if (name) {
+      const parts = name.split(" ");
+      url += `?firstName=${encodeURIComponent(parts[0] || "")}&lastName=${encodeURIComponent(parts[1] || "")}`;
+    }
+  }
+
+  // --- Record Donation ---
+  else if (input.startsWith("record donation") || input.startsWith("donate ")) {
+    url = "record-donation.html";
+    let parts = input.replace(/record donation|donate/, "").trim().split(" ");
+    let amount = parts.find(p => !isNaN(p));
+    let donor = parts.filter(p => isNaN(p)).join(" ");
+    if (amount || donor) {
+      url += `?${amount ? "amount=" + encodeURIComponent(amount) : ""}${amount && donor ? "&" : ""}${donor ? "donor=" + encodeURIComponent(donor) : ""}`;
+    }
+  }
+
+  // --- Log Expense ---
+  else if (input.startsWith("log expense") || input.startsWith("expense ")) {
+    url = "log-expense.html";
+    let parts = input.replace(/log expense|expense/, "").trim().split(" ");
+    let amount = parts.find(p => !isNaN(p));
+    let desc = parts.filter(p => isNaN(p)).join(" ");
+    if (amount || desc) {
+      url += `?${amount ? "amount=" + encodeURIComponent(amount) : ""}${amount && desc ? "&" : ""}${desc ? "desc=" + encodeURIComponent(desc) : ""}`;
+    }
+  }
+
+  // --- Generate Report ---
+  else if (input.startsWith("generate report") || input.startsWith("report ")) {
+    url = "generate-report.html";
+    let name = input.replace(/generate report|report/, "").trim();
+    if (name) url += `?reportName=${encodeURIComponent(name)}`;
+  }
+
+  if (url) {
+    window.location.href = url;
+  } else {
+    alert("❓ Sorry, I didn’t understand that command.");
+  }
+
+  aiInput.value = "";
+}
+</script>
+
+
+  ...
+  <!-- All your dashboard content -->
+
+  <!-- AI Command Bar Script -->
+  <script>
+    // your code here (the block you pasted)
+  </script>
+
+<!-- AI Action Modal -->
+<div id="aiActionModal" class="fixed inset-0 z-[1000] hidden items-center justify-center">
+  <div class="absolute inset-0 bg-black/50"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-lg w-[92%] mx-auto p-6">
+    <div class="flex items-start justify-between mb-4">
+      <h3 class="text-xl font-semibold">AI Action Preview</h3>
+      <button id="aiModalClose" aria-label="Close" class="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200">✕</button>
+    </div>
+    <div id="aiActionBody" class="space-y-4 text-sm text-gray-800"></div>
+    <div class="mt-6 flex items-center justify-end gap-3">
+      <button id="aiModalCancel" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">Cancel</button>
+      <button id="aiModalConfirm" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700">Confirm</button>
+    </div>
+  </div>
+</div>
+
+
+<script id="alive-js">
+document.addEventListener('DOMContentLoaded', () => {
+  // Header placeholders (if present)
+  try {
+    const stored = localStorage.getItem('currentUser');
+    const u = stored ? JSON.parse(stored) : {
+      fullName: localStorage.getItem('userName') || 'Guest User',
+      churchName: localStorage.getItem('churchName') || 'Your Ministry'
+    };
+    const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setText('headerUserName', u.fullName || 'Guest User');
+    setText('headerChurchName', u.churchName || 'Your Ministry');
+  } catch(e){}
+
+  // Scroll reveal for sections/cards
+  try {
+    const targets = document.querySelectorAll('section, .bg-white.rounded-2xl, .card, .tile');
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+    }, {threshold:.12});
+    targets.forEach(el => { el.classList.add('inv-reveal'); io.observe(el); });
+  } catch(e){}
+
+  // Keep existing routes; add fallback if buttons have no link
+  try {
+    const modBtns = document.querySelectorAll('button.bg-white.p-6.rounded-2xl.shadow-lg.text-center');
+    modBtns.forEach(btn => {
+      if (btn.hasAttribute('data-route')) return; // already wired by your code
+      const labelEl = btn.querySelector('p');
+      const label = labelEl ? labelEl.textContent.trim() : '';
+      if(!label) return;
+      const slug = label.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+      const route = `${slug}.html`;
+      btn.addEventListener('click', () => { window.location.href = route; }, { once:false });
+    });
+  } catch(e){}
+
+  // AI command parsing (donation intent) — uses any existing AI input/button if present
+  try {
+    const aiInput = document.getElementById('aiCommandInput') ||
+      document.querySelector('input[placeholder*="AI" i], input[placeholder*="Search" i]');
+    const aiButton = document.getElementById('aiCommandBtn') ||
+      document.querySelector('button[aria-label*="AI" i], button[aria-label*="Search" i]');
+
+    function openModal(html){
+      const m = document.getElementById('aiActionModal'); const body = document.getElementById('aiActionBody');
+      if(!m || !body) return; body.innerHTML = html; m.classList.remove('hidden'); m.classList.add('flex');
+    }
+    function closeModal(){ const m = document.getElementById('aiActionModal'); if(!m) return; m.classList.add('hidden'); m.classList.remove('flex'); }
+    function parseDonation(text){
+      const re = /record\s+(?:member\s+)?donation[s]?\s+for\s+(.+?)\s+(?:in\s+the\s+amount\s+of|amount|for)\s+\$?\s*([\d,]+(?:\.\d{1,2})?)/i;
+      const m = (text||'').match(re); if(!m) return null;
+      const name = m[1].trim(); const amt=parseFloat(m[2].replace(/,/g,''));
+      if(!name || isNaN(amt)) return null; return {name, amount: amt};
+    }
+    function handleAI(text){
+      const donation = parseDonation(text);
+      if(donation){
+        const html = `
+          <div class="space-y-2">
+            <div><strong>Action:</strong> Record member donation</div>
+            <div><strong>Member:</strong> ${donation.name}</div>
+            <div><strong>Amount:</strong> $${donation.amount.toFixed(2)}</div>
+            <div><strong>Date:</strong> ${new Date().toLocaleDateString()}</div>
+          </div>
+          <div class="mt-4 border rounded-xl overflow-hidden">
+            <div class="px-4 py-2 bg-gray-50 border-b font-medium">Journal Preview</div>
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50"><tr>
+                <th class="text-left px-4 py-2">Account</th>
+                <th class="text-right px-4 py-2">Debit</th>
+                <th class="text-right px-4 py-2">Credit</th>
+              </tr></thead>
+              <tbody>
+                <tr class="border-t">
+                  <td class="px-4 py-2">Cash</td>
+                  <td class="px-4 py-2 text-right">$${donation.amount.toFixed(2)}</td>
+                  <td class="px-4 py-2 text-right">-</td>
+                </tr>
+                <tr class="border-t">
+                  <td class="px-4 py-2">Contributions Revenue</td>
+                  <td class="px-4 py-2 text-right">-</td>
+                  <td class="px-4 py-2 text-right">$${donation.amount.toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-4 p-3 bg-blue-50 rounded-lg text-blue-900 text-sm">
+            On confirmation, this will also update Member <strong>${donation.name}</strong>'s YTD donations by <strong>$${donation.amount.toFixed(2)}</strong> (preview).
+          </div>`;
+        openModal(html);
+        ['aiModalClose','aiModalCancel'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('click', closeModal, { once:true }); });
+        const confirm = document.getElementById('aiModalConfirm');
+        if (confirm){ confirm.addEventListener('click', ()=>{ closeModal(); }, { once:true }); }
+        return;
+      }
+      openModal('<div>Could not parse that request. Try: <code>record member donations for Jane Doe in the amount of $250</code>.</div>');
+      ['aiModalClose','aiModalCancel','aiModalConfirm'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('click', closeModal, { once:true }); });
+    }
+    if (aiInput){
+      aiInput.addEventListener('keydown', (e)=>{ if (e.key==='Enter'){ e.preventDefault(); handleAI(aiInput.value.trim()); } });
+    }
+    if (aiButton){
+      aiButton.addEventListener('click', ()=>{ if (!aiInput) return; handleAI(aiInput.value.trim()); });
+    }
+  } catch(e){}
+});
+</script>
+
+</body>
+</html>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const churchName = localStorage.getItem("churchName") || "Your Ministry";
+
+  // Set button label
+  document.getElementById("logoutLabel").textContent = churchName;
+
+  // Make it act like a logout (clear + redirect)
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.clear(); // wipe login data
+    window.location.href = "login.html"; // redirect
+  });
+});
+</script>
+
+
+<!-- =========================
+     QUICK ACTION MODALS
+     (paste this before </body>)
+========================= -->
+
+<!-- Backdrop & container are duplicated per modal to keep things simple/portable -->
+
+<!-- Add Member -->
+<div id="modal-add-member" class="fixed inset-0 z-[1000] hidden items-center justify-center">
+  <div class="absolute inset-0 bg-black/50" data-close="true"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-[92%] mx-auto p-6">
+    <div class="flex items-start justify-between">
+      <h3 class="text-xl font-semibold">Add Member</h3>
+      <button class="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">✕</button>
+    </div>
+    <form id="form-add-member" class="mt-4 grid grid-cols-1 gap-3">
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">First Name
+          <input name="firstName" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+        <label class="text-sm">Last Name
+          <input name="lastName" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Email
+          <input type="email" name="email" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+        </label>
+        <label class="text-sm">Phone
+          <input name="phone" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+        </label>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Status
+          <select name="status" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+            <option>Active</option><option>Visitor</option><option>Inactive</option>
+          </select>
+        </label>
+        <label class="text-sm">Household
+          <input name="household" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Doe Household">
+        </label>
+      </div>
+      <label class="text-sm">Tags (comma separated)
+        <input name="tags" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Choir, Youth, Prayer">
+      </label>
+      <div class="mt-4 flex items-center justify-between gap-3">
+        <a href="add-member.html" class="text-sm text-indigo-600 hover:text-indigo-700">Open Full Page →</a>
+        <div class="ml-auto flex gap-2">
+          <button type="button" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg text-white" style="background:linear-gradient(45deg,#6366F1,<!-- =========================
+     QUICK ACTION MODALS
+     (paste this before </body>)
+========================= -->
+
+<!-- Backdrop & container are duplicated per modal to keep things simple/portable -->
+
+<!-- Add Member -->
+<div id="modal-add-member" class="fixed inset-0 z-[1000] hidden items-center justify-center">
+  <div class="absolute inset-0 bg-black/50" data-close="true"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-[92%] mx-auto p-6">
+    <div class="flex items-start justify-between">
+      <h3 class="text-xl font-semibold">Add Member</h3>
+      <button class="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">✕</button>
+    </div>
+    <form id="form-add-member" class="mt-4 grid grid-cols-1 gap-3">
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">First Name
+          <input name="firstName" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+        <label class="text-sm">Last Name
+          <input name="lastName" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Email
+          <input type="email" name="email" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+        </label>
+        <label class="text-sm">Phone
+          <input name="phone" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+        </label>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Status
+          <select name="status" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+            <option>Active</option><option>Visitor</option><option>Inactive</option>
+          </select>
+        </label>
+        <label class="text-sm">Household
+          <input name="household" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Doe Household">
+        </label>
+      </div>
+      <label class="text-sm">Tags (comma separated)
+        <input name="tags" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Choir, Youth, Prayer">
+      </label>
+      <div class="mt-4 flex items-center justify-between gap-3">
+        <a href="add-member.html" class="text-sm text-indigo-600 hover:text-indigo-700">Open Full Page →</a>
+        <div class="ml-auto flex gap-2">
+          <button type="button" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg text-white" style="background:linear-gradient(45deg,#6366F1,#A855F7,#06B6D4);">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Record Donation -->
+<div id="modal-record-donation" class="fixed inset-0 z-[1000] hidden items-center justify-center">
+  <div class="absolute inset-0 bg-black/50" data-close="true"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-[92%] mx-auto p-6">
+    <div class="flex items-start justify-between">
+      <h3 class="text-xl font-semibold">Record Donation</h3>
+      <button class="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">✕</button>
+    </div>
+    <form id="form-record-donation" class="mt-4 grid grid-cols-1 gap-3">
+      <label class="text-sm">Member Name
+        <input name="member" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="John Doe" required>
+      </label>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Amount (USD)
+          <input type="number" step="0.01" min="0" name="amount" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+        <label class="text-sm">Date
+          <input type="date" name="date" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Fund
+          <select name="fund" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+            <option>General</option><option>Missions</option><option>Building</option>
+          </select>
+        </label>
+        <label class="text-sm">Method
+          <select name="method" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+            <option>Online</option><option>Cash</option><option>Check</option><option>Card</option>
+          </select>
+        </label>
+      </div>
+      <label class="text-sm">Memo
+        <input name="memo" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Optional note">
+      </label>
+      <div class="mt-4 flex items-center justify-between gap-3">
+        <a href="record-donation.html" class="text-sm text-indigo-600 hover:text-indigo-700">Open Full Page →</a>
+        <div class="ml-auto flex gap-2">
+          <button type="button" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg text-white" style="background:linear-gradient(45deg,#6366F1,#A855F7,#06B6D4);">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Log Expense -->
+<div id="modal-log-expense" class="fixed inset-0 z-[1000] hidden items-center justify-center">
+  <div class="absolute inset-0 bg-black/50" data-close="true"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-[92%] mx-auto p-6">
+    <div class="flex items-start justify-between">
+      <h3 class="text-xl font-semibold">Log Expense</h3>
+      <button class="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">✕</button>
+    </div>
+    <form id="form-log-expense" class="mt-4 grid grid-cols-1 gap-3">
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Date
+          <input type="date" name="date" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+        <label class="text-sm">Amount (USD)
+          <input type="number" step="0.01" min="0" name="amount" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+      </div>
+      <label class="text-sm">Vendor
+        <input name="vendor" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Office Depot" required>
+      </label>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Category
+          <select name="category" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+            <option>Supplies</option><option>Utilities</option><option>Facilities</option>
+            <option>Ministry</option><option>Travel</option><option>Other</option>
+          </select>
+        </label>
+        <label class="text-sm">Fund
+          <select name="fund" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+            <option>General</option><option>Missions</option><option>Building</option>
+          </select>
+        </label>
+      </div>
+      <label class="text-sm">Memo
+        <input name="memo" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Optional">
+      </label>
+      <label class="text-sm">Receipt (optional)
+        <input type="file" name="receipt" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+      </label>
+      <div class="mt-4 flex items-center justify-between gap-3">
+        <a href="log-expense.html" class="text-sm text-indigo-600 hover:text-indigo-700">Open Full Page →</a>
+        <div class="ml-auto flex gap-2">
+          <button type="button" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg text-white" style="background:linear-gradient(45deg,#6366F1,#A855F7,#06B6D4);">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Launch Campaign -->
+<div id="modal-launch-campaign" class="fixed inset-0 z-[1000] hidden items-center justify-center">
+  <div class="absolute inset-0 bg-black/50" data-close="true"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-[92%] mx-auto p-6">
+    <div class="flex items-start justify-between">
+      <h3 class="text-xl font-semibold">Launch Campaign</h3>
+      <button class="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">✕</button>
+    </div>
+    <form id="form-launch-campaign" class="mt-4 grid grid-cols-1 gap-3">
+      <label class="text-sm">Campaign Name
+        <input name="name" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+      </label>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Goal Amount
+          <input type="number" step="0.01" min="0" name="goal" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+        <label class="text-sm">Fund
+          <select name="fund" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+            <option>General</option><option>Missions</option><option>Building</option>
+          </select>
+        </label>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Start Date
+          <input type="date" name="start" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+        <label class="text-sm">End Date
+          <input type="date" name="end" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+      </div>
+      <label class="text-sm">Description
+        <textarea name="desc" rows="3" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Purpose, audience, channels…"></textarea>
+      </label>
+      <div class="mt-4 flex items-center justify-between gap-3">
+        <a href="launch-campaign.html" class="text-sm text-indigo-600 hover:text-indigo-700">Open Full Page →</a>
+        <div class="ml-auto flex gap-2">
+          <button type="button" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg text-white" style="background:linear-gradient(45deg,#6366F1,#A855F7,#06B6D4);">Launch</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Generate Report -->
+<div id="modal-generate-report" class="fixed inset-0 z-[1000] hidden items-center justify-center">
+  <div class="absolute inset-0 bg-black/50" data-close="true"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-[92%] mx-auto p-6">
+    <div class="flex items-start justify-between">
+      <h3 class="text-xl font-semibold">Generate Report</h3>
+      <button class="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">✕</button>
+    </div>
+    <form id="form-generate-report" class="mt-4 grid grid-cols-1 gap-3">
+      <label class="text-sm">Report Type
+        <select name="type" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+          <option>Donations by Fund</option>
+          <option>Donor LYBUNT/SYBUNT</option>
+          <option>Attendance vs Giving</option>
+          <option>Expense by Category</option>
+          <option>Fund Activity</option>
+        </select>
+      </label>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">From
+          <input type="date" name="from" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+        <label class="text-sm">To
+          <input type="date" name="to" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Group By
+          <select name="group" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+            <option>Month</option><option>Fund</option><option>Campaign</option><option>Member</option>
+          </select>
+        </label>
+        <label class="text-sm">Output
+          <select name="output" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2">
+            <option>Table</option><option>Chart</option><option>Pivot</option>
+          </select>
+        </label>
+      </div>
+      <div class="mt-4 flex items-center justify-between gap-3">
+        <a href="generate-report.html" class="text-sm text-indigo-600 hover:text-indigo-700">Open Full Page →</a>
+        <div class="ml-auto flex gap-2">
+          <button type="button" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg text-white" style="background:linear-gradient(45deg,#6366F1,#A855F7,#06B6D4);">Run</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Schedule Event -->
+<div id="modal-schedule-event" class="fixed inset-0 z-[1000] hidden items-center justify-center">
+  <div class="absolute inset-0 bg-black/50" data-close="true"></div>
+  <div class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-[92%] mx-auto p-6">
+    <div class="flex items-start justify-between">
+      <h3 class="text-xl font-semibold">Schedule Event</h3>
+      <button class="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">✕</button>
+    </div>
+    <form id="form-schedule-event" class="mt-4 grid grid-cols-1 gap-3">
+      <label class="text-sm">Title
+        <input name="title" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+      </label>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Date
+          <input type="date" name="date" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+        </label>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="text-sm">Start
+            <input type="time" name="start" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+          </label>
+          <label class="text-sm">End
+            <input type="time" name="end" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" required>
+          </label>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Location
+          <input name="location" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Main Hall">
+        </label>
+        <label class="text-sm">Capacity
+          <input type="number" min="0" name="capacity" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="100">
+        </label>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-sm">Volunteers Needed
+          <input type="number" min="0" name="volunteers" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="6">
+        </label>
+        <label class="text-sm">Organizer
+          <input name="organizer" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" placeholder="Jane Smith">
+        </label>
+      </div>
+      <label class="text-sm">Description
+        <textarea name="desc" rows="3" class="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"></textarea>
+      </label>
+      <div class="mt-4 flex items-center justify-between gap-3">
+        <a href="schedule-event.html" class="text-sm text-indigo-600 hover:text-indigo-700">Open Full Page →</a>
+        <div class="ml-auto flex gap-2">
+          <button type="button" class="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200" data-close="true">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded-lg text-white" style="background:linear-gradient(45deg,#6366F1,#A855F7,#06B6D4);">Create</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+(() => {
+  // Map visible button text -> modal id + default route
+  const map = {
+    'add member':         { id: 'modal-add-member',         route: 'add-member.html' },
+    'record donation':    { id: 'modal-record-donation',    route: 'record-donation.html' },
+    'log expense':        { id: 'modal-log-expense',        route: 'log-expense.html' },
+    'launch campaign':    { id: 'modal-launch-campaign',    route: 'launch-campaign.html' },
+    'generate report':    { id: 'modal-generate-report',    route: 'generate-report.html' },
+    'schedule event':     { id: 'modal-schedule-event',     route: 'schedule-event.html' }
+  };
+
+  // Utility: open/close modal
+  function openModal(id){
+    const m = document.getElementById(id);
+    if (!m) return;
+    m.classList.remove('hidden'); m.classList.add('flex');
+    // focus first input
+    const first = m.querySelector('input,select,textarea,button:not([data-close])');
+    first && first.focus();
+  }
+  function closeModal(node){
+    const m = node.closest('.fixed.inset-0');
+    if (!m) return;
+    m.classList.add('hidden'); m.classList.remove('flex');
+  }
+
+  // Wire close buttons & backdrop
+  document.addEventListener('click', (e) => {
+    if (e.target.matches('[data-close], [data-close] *')) { closeModal(e.target); }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') document.querySelectorAll('.fixed.inset-0').forEach(m => m.classList.add('hidden'));
+  });
+
+  // Find Quick Action tiles/buttons by visible text
+  const candidates = Array.from(document.querySelectorAll('button, [role="button"], .card a, .card button'));
+  candidates.forEach(el => {
+    const label = (el.innerText || el.textContent || '').trim().toLowerCase();
+    if (map[label]) {
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', (ev) => {
+        // if the card already had navigation, prevent it so the modal can show
+        ev.preventDefault(); ev.stopPropagation();
+        openModal(map[label].id);
+      });
+    }
+  });
+
+  // Lightweight submit handlers (demo only) – show a toast and close.
+  function toast(msg, tone='green'){
+    const t = document.createElement('div');
+    t.className = `fixed bottom-4 right-4 px-4 py-2 rounded-lg text-white shadow-lg bg-${tone}-600`;
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(()=> t.remove(), 2200);
+  }
+
+  // Add Member
+  document.getElementById('form-add-member')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+    closeModal(e.target);
+    toast(`Member added: ${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Member saved');
+  });
+
+  // Record Donation
+  document.getElementById('form-record-donation')?.addEventListener('submit', e => {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const amt = Number(fd.get('amount')||0).toFixed(2);
+    closeModal(e.target);
+    toast(`Donation recorded: $${amt}`);
+  });
+
+  // Log Expense
+  document.getElementById('form-log-expense')?.addEventListener('submit', e => {
+    e.preventDefault(); closeModal(e.target); toast('Expense logged');
+  });
+
+  // Launch Campaign
+  document.getElementById('form-launch-campaign')?.addEventListener('submit', e => {
+    e.preventDefault(); closeModal(e.target); toast('Campaign launched');
+  });
+
+  // Generate Report
+  document.getElementById('form-generate-report')?.addEventListener('submit', e => {
+    e.preventDefault(); closeModal(e.target); toast('Report generated (preview)');
+  });
+
+  // Schedule Event
+  document.getElementById('form-schedule-event')?.addEventListener('submit', e => {
+    e.preventDefault(); closeModal(e.target); toast('Event scheduled');
+  });
+})(); <script>
+/* ===========================================================
+   SecuraFaith Data Layer + Quick Action wiring
+   Persisted in localStorage under key "sf-data-v1"
+=========================================================== */
+(function(){
+  const KEY = 'sf-data-v1';
+  const nowISO = () => new Date().toISOString();
+  const uid = () => Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+  // --- store helpers ---
+  function load(){
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) return JSON.parse(raw);
+    } catch(e){}
+    return { members:[], donations:[], expenses:[], campaigns:[], events:[], activity:[] };
+  }
+  function save(data){ localStorage.setItem(KEY, JSON.stringify(data)); }
+  function logActivity(data, type, text){
+    data.activity.unshift({ id: uid(), ts: Date.now(), type, text });
+    data.activity = data.activity.slice(0, 200);
+  }
+
+  // --- adders (modules/submodules) ---
+  function addMember(payload){
+    const db = load();
+    const rec = { id: uid(), createdAt: nowISO(), ...payload };
+    db.members.push(rec);
+    logActivity(db, 'member', `Added ${payload.firstName} ${payload.lastName}`);
+    save(db); notify(); return rec;
+  }
+  function recordDonation(payload){
+    const db = load();
+    const rec = { id: uid(), createdAt: nowISO(), ...payload, amount: Number(payload.amount||0) };
+    db.donations.push(rec);
+    logActivity(db, 'donation', `Donation $${rec.amount.toFixed(2)} from ${payload.member||'anonymous'}`);
+    save(db); notify(); return rec;
+  }
+  function logExpense(payload){
+    const db = load();
+    const rec = { id: uid(), createdAt: nowISO(), ...payload, amount: Number(payload.amount||0) };
+    db.expenses.push(rec);
+    logActivity(db, 'expense', `Expense $${rec.amount.toFixed(2)} to ${payload.vendor||'vendor'}`);
+    save(db); notify(); return rec;
+  }
+  function launchCampaign(payload){
+    const db = load();
+    const rec = { id: uid(), createdAt: nowISO(), ...payload, goal: Number(payload.goal||0) };
+    db.campaigns.push(rec);
+    logActivity(db, 'campaign', `Launched campaign: ${payload.name}`);
+    save(db); notify(); return rec;
+  }
+  function scheduleEvent(payload){
+    const db = load();
+    const rec = { id: uid(), createdAt: nowISO(), ...payload, capacity: Number(payload.capacity||0), volunteers: Number(payload.volunteers||0) };
+    db.events.push(rec);
+    logActivity(db, 'event', `Scheduled event: ${payload.title} on ${payload.date}`);
+    save(db); notify(); return rec;
+  }
+
+  // --- KPIs ---
+  function formatMoney(n){ return n.toLocaleString(undefined, { style:'currency', currency:'USD', maximumFractionDigits:0 }); }
+  function updateKpis(){
+    const db = load();
+    const d = new Date();
+    const monthStart = new Date(d.getFullYear(), d.getMonth(), 1);
+    const inMonth = iso => new Date(iso) >= monthStart;
+
+    const donMonth = db.donations.filter(x => x.date ? inMonth(x.date) : inMonth(x.createdAt))
+                      .reduce((s,x)=> s + (Number(x.amount)||0), 0);
+    const expMonth = db.expenses.filter(x => x.date ? inMonth(x.date) : inMonth(x.createdAt))
+                      .reduce((s,x)=> s + (Number(x.amount)||0), 0);
+
+    // Donations tile (container already on page)
+    const donTile = document.querySelector('#kpi-section > .grid > div:nth-child(1) h3');
+    if (donTile) donTile.textContent = formatMoney(donMonth);
+
+    // Expenses tile
+    const expTile = document.querySelector('#kpi-section > .grid > div:nth-child(2) h3');
+    if (expTile) expTile.textContent = formatMoney(expMonth);
+  }
+
+  // broadcast -> other widgets could subscribe later
+  function notify(){ window.dispatchEvent(new CustomEvent('sf:changed')); }
+
+  // run at load + on changes
+  document.addEventListener('DOMContentLoaded', updateKpis);
+  window.addEventListener('sf:changed', updateKpis);
+
+  // --- Modal helpers (reuse your CSS classes) ---
+  function toast(msg, tone='green'){
+    const t=document.createElement('div');
+    t.className=`fixed bottom-4 right-4 px-4 py-2 rounded-lg text-white shadow-lg z-[2000]`;
+    t.style.backgroundColor = tone==='green' ? '#16a34a' : tone==='red' ? '#dc2626' : '#2563eb';
+    t.textContent=msg; document.body.appendChild(t); setTimeout(()=>t.remove(),2200);
+  }
+  function closeFrom(el){ const m=el.closest('.fixed.inset-0'); if(!m) return; m.classList.add('hidden'); m.classList.remove('flex'); }
+
+  // --- Attach submit handlers (capture=true + stopImmediatePropagation) ---
+  function bindForm(id, handler){
+    const f = document.getElementById(id);
+    if (!f) return;
+    f.addEventListener('submit', (e)=>{
+      e.preventDefault(); e.stopImmediatePropagation();
+      const fd = new FormData(f);
+      const obj = Object.fromEntries(fd.entries());
+      handler(obj, f);
+    }, { capture:true });
+  }
+
+  bindForm('form-add-member', (data, form)=>{
+    addMember(data);
+    closeFrom(form);
+    toast(`Member added: ${data.firstName||''} ${data.lastName||''}`.trim());
+  });
+
+  bindForm('form-record-donation', (data, form)=>{
+    // normalize
+    data.amount = Number(data.amount||0);
+    recordDonation(data);
+    closeFrom(form);
+    toast(`Donation recorded: $${data.amount.toFixed(2)}`);
+  });
+
+  bindForm('form-log-expense', (data, form)=>{
+    data.amount = Number(data.amount||0);
+    logExpense(data);
+    closeFrom(form);
+    toast('Expense logged');
+  });
+
+  bindForm('form-launch-campaign', (data, form)=>{
+    data.goal = Number(data.goal||0);
+    launchCampaign(data);
+    closeFrom(form);
+    toast('Campaign launched');
+  });
+
+  bindForm('form-schedule-event', (data, form)=>{
+    data.capacity = Number(data.capacity||0);
+    data.volunteers = Number(data.volunteers||0);
+    scheduleEvent(data);
+    closeFrom(form);
+    toast('Event scheduled');
+  });
+
+  // --- Generate Report (CSV from saved data) ---
+  function downloadCSV(filename, rows){
+    const csv = rows.map(r => r.map(v => `"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\r\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    URL.revokeObjectURL(url); a.remove();
+  }
+
+  bindForm('form-generate-report', (data, form)=>{
+    const db = load();
+    const from = data.from ? new Date(data.from) : new Date('1970-01-01');
+    const to   = data.to   ? new Date(data.to)   : new Date();
+
+    // helpers
+    const inRange = iso => {
+      const d = new Date(iso || new Date());
+      return d >= from && d <= new Date(to.getTime()+24*3600*1000-1);
+    };
+
+    let rows = [];
+    if (data.type === 'Donations by Fund'){
+      const sums = {};
+      db.donations.filter(d=> inRange(d.date || d.createdAt))
+        .forEach(d => { const k=d.fund||'Unspecified'; sums[k]=(sums[k]||0)+ (Number(d.amount)||0); });
+      rows = [['Fund','Total']];
+      Object.entries(sums).forEach(([k,v])=> rows.push([k, v.toFixed(2)]));
+      if (rows.length===1) rows.push(['(no data in range)','0.00']);
+      downloadCSV('donations_by_fund.csv', rows);
+      toast('Report generated: Donations by Fund');
+    }
+    else if (data.type === 'Expense by Category'){
+      const sums = {};
+      db.expenses.filter(d=> inRange(d.date || d.createdAt))
+        .forEach(d => { const k=d.category||'Unspecified'; sums[k]=(sums[k]||0)+ (Number(d.amount)||0); });
+      rows = [['Category','Total']];
+      Object.entries(sums).forEach(([k,v])=> rows.push([k, v.toFixed(2)]));
+      if (rows.length===1) rows.push(['(no data in range)','0.00']);
+      downloadCSV('expense_by_category.csv', rows);
+      toast('Report generated: Expense by Category');
+    }
+    else if (data.type === 'Fund Activity'){
+      const funds = {};
+      db.donations.filter(d=> inRange(d.date || d.createdAt))
+        .forEach(d => { const k=d.fund||'Unspecified'; funds[k] = funds[k] || {inflow:0,outflow:0}; funds[k].inflow += Number(d.amount)||0; });
+      db.expenses.filter(d=> inRange(d.date || d.createdAt))
+        .forEach(d => { const k=d.fund||'Unspecified'; funds[k] = funds[k] || {inflow:0,outflow:0}; funds[k].outflow += Number(d.amount)||0; });
+      rows = [['Fund','Inflow','Outflow','Net']];
+      Object.entries(funds).forEach(([k,v])=> rows.push([k, v.inflow.toFixed(2), v.outflow.toFixed(2), (v.inflow - v.outflow).toFixed(2)]));
+      if (rows.length===1) rows.push(['(no data in range)','0.00','0.00','0.00']);
+      downloadCSV('fund_activity.csv', rows);
+      toast('Report generated: Fund Activity');
+    }
+    else {
+      // fallback: raw dump of donations in range
+      const list = db.donations.filter(d=> inRange(d.date || d.createdAt));
+      rows = [['Date','Member','Fund','Method','Amount','Memo']];
+      list.forEach(d => rows.push([d.date||d.createdAt, d.member||'', d.fund||'', d.method||'', (Number(d.amount)||0).toFixed(2), d.memo||'']));
+      if (rows.length===1) rows.push(['(no data)','', '', '', '0.00', '']);
+      downloadCSV('report.csv', rows);
+      toast('Report generated');
+    }
+
+    closeFrom(form);
+  });
+
+})();
+</script>
+<script>
+(() => {
+  const go = (sel, href) =>
+    document.querySelector(sel)?.addEventListener("click", (e) => {
+      e.preventDefault(); e.stopPropagation();
+      location.href = href;
+    });
+
+  // --- Module cards -> your current filenames ---
+  go("#member-care-card",       "member-care.html");
+  go("#donations-card",         "donations-dashboard.html");
+  go("#accounting-card",        "accounting-dashboard.html");
+  go("#events-card",            "Events-Dashboard.html"); // note capital E & D
+  go("#volunteers-card",        "volunteer-dashboard.html");
+  go("#governance-card",        "governance-dashboard.html");
+  go("#missions-card",          "missions-dashboard.html");
+  go("#discipleship-card",      "discipleship-dashboard.html");
+  go("#reports-card",           "reports-hub.html");
+
+  // --- Quick Actions (top row of 6 buttons) ---
+  const qa = document.querySelectorAll("#quick-actions button");
+  qa[0]?.addEventListener("click", () => (location.href = "member-care.html"));       // Add Member
+  qa[1]?.addEventListener("click", () => (location.href = "record-donation.html"));   // Record Donation
+  qa[2]?.addEventListener("click", () => (location.href = "log-expense.html"));       // Log Expense
+  qa[3]?.addEventListener("click", () => (location.href = "launch-campaign.html"));   // Launch Campaign
+  qa[4]?.addEventListener("click", () => (location.href = "generate-report.html"));   // Generate Report
+  qa[5]?.addEventListener("click", () => (location.href = "schedule-event.html"));    // Schedule Event
+})();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const target = 'dashboard.html';
+
+  // 1) If any link points to a consolidated dashboard, retarget it:
+  document.querySelectorAll('a[href*="dashboard-consolidated"]').forEach(a => a.href = target);
+
+  // 2) If there’s a link labeled “Back to Dashboard”, retarget it:
+  document.querySelectorAll('a').forEach(a => {
+    if ((a.textContent || '').trim().toLowerCase().includes('back to dashboard')) {
+      a.href = target;
+    }
+  });
+
+  // 3) If no back link exists, inject one at the top:
+  if (!document.querySelector(`a[href$="${target}"]`)) {
+    const back = document.createElement('a');
+    back.href = target;
+    back.className = 'inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700';
+    back.innerHTML = '← Back to Dashboard';
+    const container = document.querySelector('main') || document.body;
+    container.insertBefore(back, container.firstChild);
+  }
+});
+</script>
+
+
+</script>

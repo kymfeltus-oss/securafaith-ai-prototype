@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>::-webkit-scrollbar { display: none;}</style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#F8FAFC',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-inter">
+
+    <header id="header" class="bg-white border-b border-gray-200 px-6 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-cross text-white text-sm"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-semibold text-gray-900">Discipleship Pathways</h1>
+                        <p class="text-sm text-gray-500">Grace Community Church</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">Director</span>
+                    <span class="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">John Smith</span>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" alt="Profile" class="w-8 h-8 rounded-full">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <aside id="sidebar" class="w-64 bg-white border-r border-gray-200 h-[calc(100vh-73px)]">
+            <nav class="p-4 space-y-2">
+                <span class="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <i class="fa-solid fa-chart-line w-5"></i>
+                    <span>Dashboard</span>
+                </span>
+                <span class="flex items-center space-x-3 px-3 py-2 bg-primary text-white rounded-lg cursor-pointer">
+                    <i class="fa-solid fa-route w-5"></i>
+                    <span>Pathways</span>
+                </span>
+                <span class="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <i class="fa-solid fa-chalkboard-teacher w-5"></i>
+                    <span>Classes</span>
+                </span>
+                <span class="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <i class="fa-solid fa-water w-5"></i>
+                    <span>Baptisms</span>
+                </span>
+                <span class="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <i class="fa-solid fa-users w-5"></i>
+                    <span>People</span>
+                </span>
+                <span class="flex items-center space-x-3 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg cursor-pointer">
+                    <i class="fa-solid fa-chart-bar w-5"></i>
+                    <span>Analytics</span>
+                </span>
+            </nav>
+        </aside>
+
+        <main id="main-content" class="flex-1 p-6">
+            <div id="filters-section" class="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+                <div class="flex flex-wrap items-center gap-4">
+                    <div class="flex items-center space-x-2">
+                        <label class="text-sm font-medium text-gray-700">Date Range:</label>
+                        <select class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                            <option>Last 90 days</option>
+                            <option>Last 30 days</option>
+                            <option>This Year</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <label class="text-sm font-medium text-gray-700">Campus:</label>
+                        <select class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                            <option>All Campuses</option>
+                            <option>Main Campus</option>
+                            <option>North Campus</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <label class="text-sm font-medium text-gray-700">Pathway:</label>
+                        <select class="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                            <option>All Pathways</option>
+                            <option>Foundations</option>
+                            <option>Growth Track</option>
+                        </select>
+                    </div>
+                    <button class="px-4 py-1 bg-gray-100 text-gray-600 rounded-md text-sm hover:bg-gray-200">
+                        <i class="fa-solid fa-filter mr-2"></i>More Filters
+                    </button>
+                </div>
+            </div>
+
+            <div id="kpis-section" class="grid grid-cols-5 gap-6 mb-8">
+                <div id="kpi-participants" class="bg-white rounded-lg border border-gray-200 p-6 cursor-pointer hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Active Participants</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2">847</p>
+                            <p class="text-sm text-green-600 mt-1">
+                                <i class="fa-solid fa-arrow-up mr-1"></i>12% vs last period
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-users text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="kpi-completion" class="bg-white rounded-lg border border-gray-200 p-6 cursor-pointer hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Step Completion</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2">78%</p>
+                            <p class="text-sm text-green-600 mt-1">
+                                <i class="fa-solid fa-arrow-up mr-1"></i>5% vs last period
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-check-circle text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="kpi-time-next" class="bg-white rounded-lg border border-gray-200 p-6 cursor-pointer hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Avg Time to Next</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2">18d</p>
+                            <p class="text-sm text-red-600 mt-1">
+                                <i class="fa-solid fa-arrow-down mr-1"></i>2d improvement
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-clock text-orange-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="kpi-fill-rate" class="bg-white rounded-lg border border-gray-200 p-6 cursor-pointer hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Class Fill Rate</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2">92%</p>
+                            <p class="text-sm text-green-600 mt-1">
+                                <i class="fa-solid fa-arrow-up mr-1"></i>8% vs target
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-chalkboard-teacher text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="kpi-baptisms" class="bg-white rounded-lg border border-gray-200 p-6 cursor-pointer hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Baptism Pipeline</p>
+                            <p class="text-3xl font-bold text-gray-900 mt-2">24</p>
+                            <p class="text-sm text-blue-600 mt-1">
+                                <i class="fa-solid fa-calendar mr-1"></i>Next: Dec 15
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-water text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 mb-8">
+                <div id="funnel-widget" class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Discipleship Funnel</h3>
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                    <div id="funnel-chart" class="h-64"></div>
+                </div>
+
+                <div id="cohorts-widget" class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Cohort Retention</h3>
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </button>
+                    </div>
+                    <div id="cohorts-chart" class="h-64"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 mb-8">
+                <div id="classes-widget" class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Upcoming Classes</h3>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded-md">Calendar</button>
+                            <button class="px-3 py-1 text-sm bg-primary text-white rounded-md">List</button>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-gray-900">Foundations 101</p>
+                                <p class="text-sm text-gray-600">Dec 3, 2024 • 7:00 PM</p>
+                                <p class="text-sm text-gray-500">Room A • John Smith</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">18/20</span>
+                                <p class="text-xs text-gray-500 mt-1">2 waitlist</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <p class="font-medium text-gray-900">Growth Track</p>
+                                <p class="text-sm text-gray-600">Dec 5, 2024 • 6:30 PM</p>
+                                <p class="text-sm text-gray-500">Room B • Sarah Johnson</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">12/15</span>
+                                <p class="text-xs text-gray-500 mt-1">3 spots left</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="baptisms-widget" class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Baptism Pipeline</h3>
+                        <button class="px-3 py-1 text-sm bg-primary text-white rounded-md">
+                            <i class="fa-solid fa-plus mr-1"></i>Add Candidate
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-600">New Candidates</span>
+                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded-full">8</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-600">Interview Scheduled</span>
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-sm font-medium rounded-full">5</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-600">Cleared for Baptism</span>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">7</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-600">Scheduled</span>
+                            <span class="px-2 py-1 bg-purple-100 text-purple-800 text-sm font-medium rounded-full">4</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                        <p class="text-sm font-medium text-blue-900">Next Baptism Service</p>
+                        <p class="text-sm text-blue-700">December 15, 2024 • 11:00 AM</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quick-actions" class="bg-white rounded-lg border border-gray-200 p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <div class="grid grid-cols-6 gap-4">
+                    <button class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-2">
+                            <i class="fa-solid fa-route text-blue-600"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">New Pathway</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mb-2">
+                            <i class="fa-solid fa-chalkboard-teacher text-green-600"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">New Class</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mb-2">
+                            <i class="fa-solid fa-calendar-plus text-purple-600"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Add Session</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mb-2">
+                            <i class="fa-solid fa-user-plus text-orange-600"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Enroll Person</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-2">
+                            <i class="fa-solid fa-water text-blue-600"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Baptism Candidate</span>
+                    </button>
+                    <button class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mb-2">
+                            <i class="fa-solid fa-file-import text-gray-600"></i>
+                        </div>
+                        <span class="text-sm font-medium text-gray-700">Import Roster</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        Highcharts.chart('funnel-chart', {
+            chart: { type: 'funnel' },
+            title: { text: null },
+            credits: { enabled: false },
+            plotOptions: {
+                funnel: {
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b> ({point.y})',
+                        softConnector: true
+                    },
+                    center: ['50%', '50%'],
+                    neckWidth: '30%',
+                    neckHeight: '25%',
+                    width: '80%'
+                }
+            },
+            series: [{
+                name: 'Discipleship Journey',
+                data: [
+                    ['Join', 1200],
+                    ['Attend', 950],
+                    ['Complete', 740],
+                    ['Serve', 420]
+                ],
+                colors: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6']
+            }]
+        });
+
+        Highcharts.chart('cohorts-chart', {
+            chart: { type: 'line' },
+            title: { text: null },
+            credits: { enabled: false },
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+            },
+            yAxis: {
+                title: { text: 'Retention %' },
+                max: 100
+            },
+            series: [{
+                name: 'Cohort Retention',
+                data: [95, 88, 82, 78, 75, 72],
+                color: '#3B82F6'
+            }]
+        });
+    </script>
+
+</body>
+</html>

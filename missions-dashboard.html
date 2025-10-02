@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        accent: '#06b6d4',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { display: none;}
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04); }
+        .glow-hover:hover { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+        .count-up { animation: countUp 0.8s ease-out; }
+        @keyframes countUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .reveal-on-scroll { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+        .revealed { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<header id="header" class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-globe text-white text-sm"></i>
+                    </div>
+                    <h1 class="text-xl font-semibold text-gray-900">Missions & Outreach</h1>
+                </div>
+                <nav class="text-sm text-gray-500">
+                    <span>Dashboard</span> / <span class="text-gray-900">Missions</span>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <span id="headerUserName" class="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">John Anderson</span>
+                    <span id="headerChurchName" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">Grace Community Church</span>
+                </div>
+                <button data-route="dashboard.html" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary transition-colors">
+                    <i class="fa-solid fa-arrow-left mr-2"></i>Back to Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main id="missions-main" class="max-w-7xl mx-auto px-6 py-8">
+    
+    <section id="missions-hero" class="mb-8 reveal-on-scroll">
+        <div class="bg-gradient-to-r from-primary to-secondary rounded-2xl p-8 text-white">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold mb-2">Making a Global Impact</h2>
+                    <p class="text-blue-100 text-lg">Empowering missions, supporting missionaries, and transforming communities worldwide</p>
+                </div>
+                <div class="hidden lg:block">
+                    <img class="w-48 h-48 rounded-xl opacity-80" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/d511b316ee-e3e31247eace7a499941.png" alt="diverse group of missionaries and volunteers helping in community, warm lighting, modern photography style" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="missions-kpis" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl p-6 shadow-sm card-hover reveal-on-scroll">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-plane-departure text-primary text-xl"></i>
+                </div>
+                <span class="text-xs font-medium px-2 py-1 bg-green-100 text-green-800 rounded-full">+2 this month</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 count-up">8</h3>
+            <p class="text-gray-600 text-sm">Active Mission Trips</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-sm card-hover reveal-on-scroll">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-success/10 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-dollar-sign text-success text-xl"></i>
+                </div>
+                <span class="text-xs font-medium px-2 py-1 bg-blue-100 text-blue-800 rounded-full">87% of goal</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 count-up">$124,500</h3>
+            <p class="text-gray-600 text-sm">Funds Raised YTD</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-sm card-hover reveal-on-scroll">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-heart text-accent text-xl"></i>
+                </div>
+                <span class="text-xs font-medium px-2 py-1 bg-purple-100 text-purple-800 rounded-full">This quarter</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 count-up">12</h3>
+            <p class="text-gray-600 text-sm">Outreach Events</p>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-sm card-hover reveal-on-scroll">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 bg-warning/10 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-users text-warning text-xl"></i>
+                </div>
+                <span class="text-xs font-medium px-2 py-1 bg-orange-100 text-orange-800 rounded-full">2,340 served</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 count-up">47</h3>
+            <p class="text-gray-600 text-sm">Active Missionaries</p>
+        </div>
+    </section>
+
+    <section id="missions-alerts" class="mb-8 reveal-on-scroll">
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Action Required</h3>
+            </div>
+            <div class="divide-y divide-gray-100">
+                <div class="px-6 py-4 flex items-center justify-between hover:bg-gray-50">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-exclamation-triangle text-red-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-900">Visa expires in 7 days</p>
+                            <p class="text-sm text-gray-600">Sarah Johnson - Guatemala Mission Trip</p>
+                        </div>
+                    </div>
+                    <button class="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors">
+                        Review
+                    </button>
+                </div>
+                <div class="px-6 py-4 flex items-center justify-between hover:bg-gray-50">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-clock text-yellow-600"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-900">Overdue task: Medical forms</p>
+                            <p class="text-sm text-gray-600">Kenya Water Project - Due 3 days ago</p>
+                        </div>
+                    </div>
+                    <button class="px-4 py-2 bg-yellow-600 text-white text-sm rounded-lg hover:bg-yellow-700 transition-colors">
+                        Update
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="missions-modules" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <div class="lg:col-span-2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div class="module-card bg-white rounded-xl p-6 shadow-sm card-hover glow-hover cursor-pointer reveal-on-scroll" data-route="missions-trips.html">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-plane-departure text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Mission Trips</h3>
+                    <p class="text-gray-600 text-sm mb-4">Plan trips, manage budgets, track fundraising, and coordinate teams</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium px-2 py-1 bg-blue-100 text-blue-800 rounded-full">8 Active</span>
+                        <i class="fa-solid fa-arrow-right text-gray-400"></i>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-xl p-6 shadow-sm card-hover glow-hover cursor-pointer reveal-on-scroll" data-route="missionaries.html">
+                    <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-user-tie text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Missionaries</h3>
+                    <p class="text-gray-600 text-sm mb-4">Support tracking, check-ins, and missionary care management</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium px-2 py-1 bg-green-100 text-green-800 rounded-full">47 Active</span>
+                        <i class="fa-solid fa-arrow-right text-gray-400"></i>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-xl p-6 shadow-sm card-hover glow-hover cursor-pointer reveal-on-scroll" data-route="partners.html">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-handshake text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Partners</h3>
+                    <p class="text-gray-600 text-sm mb-4">Manage partner organizations and collaborative relationships</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium px-2 py-1 bg-purple-100 text-purple-800 rounded-full">15 Partners</span>
+                        <i class="fa-solid fa-arrow-right text-gray-400"></i>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-xl p-6 shadow-sm card-hover glow-hover cursor-pointer reveal-on-scroll" data-route="outreach-events.html">
+                    <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-calendar-days text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Outreach Events</h3>
+                    <p class="text-gray-600 text-sm mb-4">Local events, signups, attendance tracking, and impact</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium px-2 py-1 bg-orange-100 text-orange-800 rounded-full">12 Upcoming</span>
+                        <i class="fa-solid fa-arrow-right text-gray-400"></i>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-xl p-6 shadow-sm card-hover glow-hover cursor-pointer reveal-on-scroll" data-route="missions-impact.html">
+                    <div class="w-12 h-12 bg-gradient-to-r from-teal-500 to-teal-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-chart-line text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Impact & Stories</h3>
+                    <p class="text-gray-600 text-sm mb-4">Track metrics, capture stories, and measure community impact</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium px-2 py-1 bg-teal-100 text-teal-800 rounded-full">89 Stories</span>
+                        <i class="fa-solid fa-arrow-right text-gray-400"></i>
+                    </div>
+                </div>
+
+                <div class="module-card bg-white rounded-xl p-6 shadow-sm card-hover glow-hover cursor-pointer reveal-on-scroll" data-route="missions-fundraising.html">
+                    <div class="w-12 h-12 bg-gradient-to-r from-pink-500 to-pink-600 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fa-solid fa-donate text-white text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Fundraising</h3>
+                    <p class="text-gray-600 text-sm mb-4">Pledges, donations, progress tracking, and donor management</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-medium px-2 py-1 bg-pink-100 text-pink-800 rounded-full">$124.5K</span>
+                        <i class="fa-solid fa-arrow-right text-gray-400"></i>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            
+            <div id="upcoming-trips" class="bg-white rounded-xl shadow-sm reveal-on-scroll">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Upcoming Trips</h3>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-plane text-blue-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-gray-900">Guatemala Water Project</p>
+                            <p class="text-sm text-gray-600">Departs Mar 15 • 12 volunteers</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50">
+                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-heart text-green-600"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="font-medium text-gray-900">Kenya Medical Mission</p>
+                            <p class="text-sm text-gray-600">Departs Apr 2 • 8 volunteers</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quick-actions" class="bg-white rounded-xl shadow-sm reveal-on-scroll">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
+                </div>
+                <div class="p-6 space-y-3">
+                    <button data-route="create-trip.html" class="w-full flex items-center justify-center px-4 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg hover:shadow-lg transition-all glow-hover">
+                        <i class="fa-solid fa-plus mr-2"></i>Create Mission Trip
+                    </button>
+                    <button data-route="add-missionary.html" class="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fa-solid fa-user-plus mr-2"></i>Add Missionary
+                    </button>
+                    <button data-route="missions-reports.html" class="w-full flex items-center justify-center px-4 py-3 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        <i class="fa-solid fa-chart-bar mr-2"></i>View Reports
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{"fullName":"John Anderson","userName":"john.anderson","churchName":"Grace Community Church"}');
+    
+    document.getElementById('headerUserName').textContent = currentUser.fullName || currentUser.userName || 'User';
+    document.getElementById('headerChurchName').textContent = currentUser.churchName || 'Church';
+
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('revealed');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+
+    document.querySelectorAll('[data-route]').forEach(element => {
+        element.addEventListener('click', function(e) {
+            e.preventDefault();
+            const route = this.getAttribute('data-route');
+            console.log('nav_missions_dashboard_opened', { route });
+            
+            this.style.transform = 'scale(0.95)';
+            this.style.opacity = '0.8';
+            
+            setTimeout(() => {
+                window.location.href = route;
+            }, 150);
+        });
+    });
+
+    document.querySelectorAll('.module-card:not([data-route])').forEach(card => {
+        card.addEventListener('click', function() {
+            const title = this.querySelector('h3').textContent;
+            const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+            const route = `${slug}.html`;
+            
+            console.log('nav_missions_module_clicked', { title, route });
+            
+            this.style.transform = 'scale(0.95)';
+            this.style.opacity = '0.8';
+            
+            setTimeout(() => {
+                window.location.href = route;
+            }, 150);
+        });
+    });
+
+    const countElements = document.querySelectorAll('.count-up');
+    countElements.forEach((el, index) => {
+        setTimeout(() => {
+            el.classList.add('count-up');
+        }, index * 100);
+    });
+});
+</script>
+
+</body>
+</html>

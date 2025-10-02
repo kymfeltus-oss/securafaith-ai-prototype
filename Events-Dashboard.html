@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        ::-webkit-scrollbar { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+        .glass-effect { backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.1); }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-shadow { box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    
+    <div id="events-dashboard" class="min-h-screen">
+        <!-- Header -->
+        <header id="header" class="bg-white border-b border-gray-200 sticky top-0 z-50">
+            <div class="px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button id="back-btn" class="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
+                            <i class="fa-solid fa-arrow-left mr-2"></i>
+                            <span class="hidden sm:inline">Dashboard</span>
+                        </button>
+                        <div class="h-6 w-px bg-gray-300 hidden sm:block"></div>
+                        <h1 class="text-xl font-semibold text-gray-900">Events & Facilities</h1>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="hidden md:flex items-center space-x-2 text-sm text-gray-600">
+                            <span>SecuraFaith-AI</span>
+                            <div class="w-2 h-2 bg-blue-600 rounded-full"></div>
+                        </div>
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" alt="User" class="w-8 h-8 rounded-full">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Global Filters -->
+        <div id="global-filters" class="bg-white border-b border-gray-200 px-6 py-3">
+            <div class="flex flex-wrap items-center gap-3">
+                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option>Next 30 days</option>
+                    <option>Next 7 days</option>
+                    <option>This week</option>
+                    <option>This month</option>
+                </select>
+                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option>All Campuses</option>
+                    <option>Main Campus</option>
+                    <option>East Campus</option>
+                    <option>West Campus</option>
+                </select>
+                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option>All Event Types</option>
+                    <option>Worship</option>
+                    <option>Wedding</option>
+                    <option>Funeral</option>
+                    <option>Conference</option>
+                </select>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                    <i class="fa-solid fa-filter mr-2"></i>More Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div id="kpi-section" class="px-6 py-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div class="bg-white rounded-xl p-6 card-shadow cursor-pointer hover:shadow-lg transition-shadow" data-route="events/utilization.html">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Utilization</p>
+                            <p class="text-2xl font-bold text-gray-900">87%</p>
+                            <p class="text-xs text-green-600 mt-1">
+                                <i class="fa-solid fa-arrow-up mr-1"></i>+5% from last month
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-chart-pie text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow cursor-pointer hover:shadow-lg transition-shadow" data-route="events/list.html">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Events Scheduled</p>
+                            <p class="text-2xl font-bold text-gray-900">142</p>
+                            <p class="text-xs text-blue-600 mt-1">
+                                <i class="fa-solid fa-calendar mr-1"></i>Next 30 days
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-calendar-check text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow cursor-pointer hover:shadow-lg transition-shadow" data-route="events/conflicts.html">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Conflict Queue</p>
+                            <p class="text-2xl font-bold text-red-600">3</p>
+                            <p class="text-xs text-red-600 mt-1">
+                                <i class="fa-solid fa-exclamation-triangle mr-1"></i>Needs attention
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-triangle-exclamation text-red-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow cursor-pointer hover:shadow-lg transition-shadow" data-route="events/services.html">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">On-Time Setups</p>
+                            <p class="text-2xl font-bold text-gray-900">94%</p>
+                            <p class="text-xs text-green-600 mt-1">
+                                <i class="fa-solid fa-clock mr-1"></i>This month
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-clock text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-6 card-shadow cursor-pointer hover:shadow-lg transition-shadow" data-route="events/revenue.html">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Rental Revenue</p>
+                            <p class="text-2xl font-bold text-gray-900">$18.5k</p>
+                            <p class="text-xs text-green-600 mt-1">
+                                <i class="fa-solid fa-dollar-sign mr-1"></i>This month
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-dollar-sign text-yellow-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div id="main-content" class="px-6 pb-6">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                
+                <!-- Left Column - Calendar & Events -->
+                <div class="xl:col-span-2 space-y-6">
+                    
+                    <!-- Calendar Widget -->
+                    <div id="calendar-widget" class="bg-white rounded-xl card-shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-lg font-semibold text-gray-900">Event Calendar</h2>
+                                <div class="flex items-center space-x-2">
+                                    <button class="px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                        Agenda
+                                    </button>
+                                    <button class="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                                        Day
+                                    </button>
+                                    <button class="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                                        Week
+                                    </button>
+                                    <button class="px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                                        Rooms
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <!-- Calendar Grid -->
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                        <div>
+                                            <p class="font-medium text-gray-900">Sunday Service</p>
+                                            <p class="text-sm text-gray-600">Main Sanctuary • 9:00 AM - 11:00 AM</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Confirmed</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-3 h-3 bg-purple-500 rounded-full"></div>
+                                        <div>
+                                            <p class="font-medium text-gray-900">Johnson Wedding</p>
+                                            <p class="text-sm text-gray-600">Fellowship Hall • 2:00 PM - 6:00 PM</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded-full">Pending</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                        <div>
+                                            <p class="font-medium text-gray-900">Youth Group</p>
+                                            <p class="text-sm text-gray-600">Youth Center • 7:00 PM - 9:00 PM</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">Conflict</span>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                        <div>
+                                            <p class="font-medium text-gray-900">Bible Study</p>
+                                            <p class="text-sm text-gray-600">Conference Room A • 7:30 PM - 9:00 PM</p>
+                                        </div>
+                                    </div>
+                                    <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">Confirmed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conflict Center -->
+                    <div id="conflict-center" class="bg-white rounded-xl card-shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-lg font-semibold text-gray-900">Conflict Center</h2>
+                                <span class="px-2 py-1 text-xs bg-red-100 text-red-800 rounded-full">3 Active</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6 space-y-4">
+                            <div class="border border-red-200 rounded-lg p-4 bg-red-50">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex-1">
+                                        <h3 class="font-medium text-gray-900">Youth Group vs Bible Study</h3>
+                                        <p class="text-sm text-gray-600 mt-1">Both events scheduled for Youth Center on Dec 15, 7:00 PM</p>
+                                        <div class="flex items-center space-x-4 mt-3">
+                                            <span class="text-xs text-gray-500">Priority: Youth Group (recurring)</span>
+                                            <span class="text-xs text-gray-500">Alternative: Conference Room A available</span>
+                                        </div>
+                                    </div>
+                                    <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                                        Resolve
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="border border-yellow-200 rounded-lg p-4 bg-yellow-50">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex-1">
+                                        <h3 class="font-medium text-gray-900">Equipment Double Booking</h3>
+                                        <p class="text-sm text-gray-600 mt-1">Sound system requested for 2 events on Dec 16</p>
+                                        <div class="flex items-center space-x-4 mt-3">
+                                            <span class="text-xs text-gray-500">Events: Wedding, Conference</span>
+                                            <span class="text-xs text-gray-500">Solution: Rent additional equipment</span>
+                                        </div>
+                                    </div>
+                                    <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 transition-colors">
+                                        Resolve
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Quick Actions & Service Orders -->
+                <div class="space-y-6">
+                    
+                    <!-- Quick Actions -->
+                    <div id="quick-actions" class="bg-white rounded-xl card-shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-gray-900">Quick Actions</h2>
+                        </div>
+                        
+                        <div class="p-6 space-y-3">
+                            <button class="w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 transition-colors text-left flex items-center">
+                                <i class="fa-solid fa-plus mr-3"></i>
+                                <span>New Event</span>
+                            </button>
+                            
+                            <button class="w-full bg-gray-100 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-200 transition-colors text-left flex items-center">
+                                <i class="fa-solid fa-ban mr-3"></i>
+                                <span>Create Blackout</span>
+                            </button>
+                            
+                            <button class="w-full bg-gray-100 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-200 transition-colors text-left flex items-center">
+                                <i class="fa-solid fa-file-contract mr-3"></i>
+                                <span>New Contract</span>
+                            </button>
+                            
+                            <button class="w-full bg-gray-100 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-200 transition-colors text-left flex items-center">
+                                <i class="fa-solid fa-upload mr-3"></i>
+                                <span>Import ICS</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Today's Service Orders -->
+                    <div id="service-orders" class="bg-white rounded-xl card-shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-lg font-semibold text-gray-900">Today's Service Orders</h2>
+                                <span class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full">5 Active</span>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6 space-y-4">
+                            <div class="border-l-4 border-blue-500 pl-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="font-medium text-gray-900">AV Setup - Sunday Service</h3>
+                                        <p class="text-sm text-gray-600">Main Sanctuary • 7:00 AM</p>
+                                        <p class="text-xs text-blue-600 mt-1">Assigned: Mike Johnson</p>
+                                    </div>
+                                    <button class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 transition-colors">
+                                        Start
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="border-l-4 border-yellow-500 pl-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="font-medium text-gray-900">Custodial - Wedding Setup</h3>
+                                        <p class="text-sm text-gray-600">Fellowship Hall • 12:00 PM</p>
+                                        <p class="text-xs text-yellow-600 mt-1">Assigned: Cleaning Team</p>
+                                    </div>
+                                    <button class="bg-yellow-600 text-white px-3 py-1 rounded text-sm hover:bg-yellow-700 transition-colors">
+                                        Pending
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="border-l-4 border-purple-500 pl-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="font-medium text-gray-900">Security - Evening Event</h3>
+                                        <p class="text-sm text-gray-600">All Areas • 6:00 PM</p>
+                                        <p class="text-xs text-purple-600 mt-1">Assigned: Security Team</p>
+                                    </div>
+                                    <button class="bg-purple-600 text-white px-3 py-1 rounded text-sm hover:bg-purple-700 transition-colors">
+                                        Schedule
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Insights -->
+                    <div id="ai-insights" class="bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl card-shadow text-white">
+                        <div class="p-6">
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div class="w-8 h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                                    <i class="fa-solid fa-brain text-white"></i>
+                                </div>
+                                <h2 class="text-lg font-semibold">AI Insights</h2>
+                            </div>
+                            
+                            <div class="space-y-3">
+                                <div class="bg-white bg-opacity-10 rounded-lg p-3">
+                                    <p class="text-sm font-medium">Optimization Opportunity</p>
+                                    <p class="text-xs opacity-90 mt-1">Conference Room B is underutilized. Consider promoting for small group meetings.</p>
+                                </div>
+                                
+                                <div class="bg-white bg-opacity-10 rounded-lg p-3">
+                                    <p class="text-sm font-medium">Overrun Risk</p>
+                                    <p class="text-xs opacity-90 mt-1">Johnson Wedding may exceed 6 PM based on similar events. Consider buffer time.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auto-routing for dashboard tiles and buttons
+        document.querySelectorAll('[data-route], .tile, .card button, .card a.btn').forEach(el => {
+            if (el.dataset.route) { 
+                el.addEventListener('click', () => location.href = el.dataset.route); 
+                return; 
+            }
+            const text = (el.innerText || el.textContent || '').trim().toLowerCase();
+            if (!text) return;
+            const slug = text.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            const base = el.closest('[data-scope="module"]') ? 'modules/' : '';
+            const route = `${base}${slug}.html`;
+            el.addEventListener('click', () => location.href = route);
+            el.style.cursor = 'pointer';
+        });
+
+        // Back button functionality
+        document.getElementById('back-btn').addEventListener('click', () => {
+            location.href = 'dashboard.html';
+        });
+
+        // Filter persistence
+        const filters = document.querySelectorAll('#global-filters select');
+        filters.forEach(filter => {
+            filter.addEventListener('change', () => {
+                const filterData = {
+                    dateRange: filters[0].value,
+                    campus: filters[1].value,
+                    eventType: filters[2].value,
+                    timestamp: Date.now()
+                };
+                localStorage.setItem('events_filters_v1', JSON.stringify(filterData));
+            });
+        });
+
+        // Load saved filters
+        const savedFilters = localStorage.getItem('events_filters_v1');
+        if (savedFilters) {
+            const filterData = JSON.parse(savedFilters);
+            filters[0].value = filterData.dateRange || 'Next 30 days';
+            filters[1].value = filterData.campus || 'All Campuses';
+            filters[2].value = filterData.eventType || 'All Event Types';
+        }
+
+        // Analytics tracking
+        function trackEvent(eventName, properties = {}) {
+            console.log('Analytics:', eventName, properties);
+        }
+
+        // Track page load
+        trackEvent('events_opened', { source: 'dashboard' });
+
+        // Track filter changes
+        filters.forEach((filter, index) => {
+            filter.addEventListener('change', () => {
+                trackEvent('events_filter_changed', {
+                    filter: ['dateRange', 'campus', 'eventType'][index],
+                    value: filter.value
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <style>
+        ::-webkit-scrollbar { display: none;}
+        :root {
+            --brand-gradient: linear-gradient(45deg,#6366F1,#A855F7,#06B6D4);
+        }
+        html {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji';
+        }
+        .heading {
+            font-family: Sora, Inter, ui-sans-serif, system-ui;
+        }
+        .btn-primary {
+            background: var(--brand-gradient);
+            transition: all 220ms ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(99,102,241,.55);
+        }
+        .card-hover {
+            transition: all 180ms ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(15,23,42,.18);
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(12px);
+            transition: all 180ms ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-[#F8FAFF] min-h-screen">
+    <header id="header" class="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-[#E5E7EB]">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-6">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#6366F1] to-[#A855F7] flex items-center justify-center">
+                            <i class="fa-solid fa-shield-heart text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h1 class="heading text-xl font-bold text-[#0F172A]">SecuraFaith AI</h1>
+                            <div class="text-sm text-[#64748B]">Donations & Giving</div>
+                        </div>
+                    </div>
+                    <nav class="hidden md:flex items-center space-x-1">
+                        <span class="px-3 py-2 text-[#64748B] hover:text-[#6366F1] transition-colors cursor-pointer">Dashboard</span>
+                        <i class="fa-solid fa-chevron-right text-[#E5E7EB] text-xs"></i>
+                        <span class="px-3 py-2 text-[#6366F1] font-medium">Donations</span>
+                    </nav>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-3">
+                        <div class="px-3 py-1.5 bg-[#6366F1]/10 rounded-lg">
+                            <span id="headerUserName" class="text-sm font-medium text-[#6366F1]">Admin User</span>
+                        </div>
+                        <div class="px-3 py-1.5 bg-[#A855F7]/10 rounded-lg">
+                            <span id="headerChurchName" class="text-sm font-medium text-[#A855F7]">Grace Community</span>
+                        </div>
+                    </div>
+                    <button class="p-2 text-[#64748B] hover:text-[#6366F1] transition-colors">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                    </button>
+                    <button onclick="location.href='login.html'" class="p-2 text-[#64748B] hover:text-[#EF4444] transition-colors">
+                        <i class="fa-solid fa-sign-out-alt text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main id="donations-dashboard" class="max-w-7xl mx-auto px-6 py-8">
+        <div id="dashboard-header" class="mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div>
+                    <h2 class="heading text-3xl font-bold text-[#0F172A] mb-2">Donations & Giving Dashboard</h2>
+                    <p class="text-[#64748B]">Manage campaigns, track pledges, and generate compliant receipts</p>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <button class="btn-primary px-6 py-3 text-white rounded-2xl font-medium hover:shadow-lg transition-all">
+                        <i class="fa-solid fa-plus mr-2"></i>Record Gift
+                    </button>
+                    <button class="px-6 py-3 bg-white text-[#6366F1] border-2 border-[#6366F1] rounded-2xl font-medium hover:bg-[#6366F1] hover:text-white transition-all">
+                        <i class="fa-solid fa-file-export mr-2"></i>Export Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="kpi-section" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card-hover bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(15,23,42,.10)]">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-[#16A34A]/10 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-dollar-sign text-[#16A34A] text-xl"></i>
+                    </div>
+                    <span class="text-xs text-[#16A34A] bg-[#16A34A]/10 px-2 py-1 rounded-lg">+12.5%</span>
+                </div>
+                <h3 class="text-2xl font-bold text-[#0F172A] mb-1">$125,450</h3>
+                <p class="text-[#64748B] text-sm">Total Giving (YTD)</p>
+            </div>
+
+            <div class="card-hover bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(15,23,42,.10)]">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-[#6366F1]/10 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-users text-[#6366F1] text-xl"></i>
+                    </div>
+                    <span class="text-xs text-[#16A34A] bg-[#16A34A]/10 px-2 py-1 rounded-lg">+8.2%</span>
+                </div>
+                <h3 class="text-2xl font-bold text-[#0F172A] mb-1">342</h3>
+                <p class="text-[#64748B] text-sm">Active Donors</p>
+            </div>
+
+            <div class="card-hover bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(15,23,42,.10)]">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-[#A855F7]/10 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-handshake text-[#A855F7] text-xl"></i>
+                    </div>
+                    <span class="text-xs text-[#F59E0B] bg-[#F59E0B]/10 px-2 py-1 rounded-lg">-2.1%</span>
+                </div>
+                <h3 class="text-2xl font-bold text-[#0F172A] mb-1">$45,200</h3>
+                <p class="text-[#64748B] text-sm">Pledge Commitments</p>
+            </div>
+
+            <div class="card-hover bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(15,23,42,.10)]">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-[#06B6D4]/10 rounded-xl flex items-center justify-center">
+                        <i class="fa-solid fa-repeat text-[#06B6D4] text-xl"></i>
+                    </div>
+                    <span class="text-xs text-[#16A34A] bg-[#16A34A]/10 px-2 py-1 rounded-lg">+15.7%</span>
+                </div>
+                <h3 class="text-2xl font-bold text-[#0F172A] mb-1">156</h3>
+                <p class="text-[#64748B] text-sm">Recurring Donors</p>
+            </div>
+        </div>
+
+        <div id="main-content" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div id="left-column" class="lg:col-span-2 space-y-8">
+                <div id="giving-trends" class="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(15,23,42,.10)]">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="heading text-xl font-semibold text-[#0F172A]">Giving Trends</h3>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1.5 text-sm bg-[#6366F1] text-white rounded-lg">6M</button>
+                            <button class="px-3 py-1.5 text-sm text-[#64748B] hover:bg-[#F8FAFF] rounded-lg">1Y</button>
+                        </div>
+                    </div>
+                    <div id="giving-chart" class="h-80"></div>
+                </div>
+
+                <div id="recent-donations" class="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(15,23,42,.10)]">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="heading text-xl font-semibold text-[#0F172A]">Recent Donations</h3>
+                        <button class="text-[#6366F1] hover:text-[#A855F7] text-sm font-medium">View All</button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-[#F8FAFF] rounded-xl">
+                            <div class="flex items-center space-x-4">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-5.jpg" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h4 class="font-medium text-[#0F172A]">Sarah Johnson</h4>
+                                    <p class="text-sm text-[#64748B]">General Fund • 2 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-[#0F172A]">$250.00</div>
+                                <div class="text-xs text-[#16A34A]">Recurring</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-4 bg-[#F8FAFF] rounded-xl">
+                            <div class="flex items-center space-x-4">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h4 class="font-medium text-[#0F172A]">Michael Chen</h4>
+                                    <p class="text-sm text-[#64748B]">Building Fund • 5 hours ago</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-[#0F172A]">$1,000.00</div>
+                                <div class="text-xs text-[#64748B]">One-time</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 bg-[#F8FAFF] rounded-xl">
+                            <div class="flex items-center space-x-4">
+                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <h4 class="font-medium text-[#0F172A]">Emma Rodriguez</h4>
+                                    <p class="text-sm text-[#64748B]">Missions • 1 day ago</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="font-semibold text-[#0F172A]">$75.00</div>
+                                <div class="text-xs text-[#16A34A]">Recurring</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="right-column" class="space-y-8">
+                <div id="quick-actions" class="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(15,23,42,.10)]">
+                    <h3 class="heading text-xl font-semibold text-[#0F172A] mb-6">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <button class="w-full flex items-center space-x-3 p-4 bg-[#F8FAFF] hover:bg-[#6366F1]/10 rounded-xl transition-all">
+                            <div class="w-10 h-10 bg-[#6366F1]/10 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-plus text-[#6366F1]"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="font-medium text-[#0F172A]">Record Gift</div>
+                                <div class="text-sm text-[#64748B]">Add new donation</div>
+                            </div>
+                        </button>
+
+                        <button class="w-full flex items-center space-x-3 p-4 bg-[#F8FAFF] hover:bg-[#A855F7]/10 rounded-xl transition-all">
+                            <div class="w-10 h-10 bg-[#A855F7]/10 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-bullhorn text-[#A855F7]"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="font-medium text-[#0F172A]">Create Campaign</div>
+                                <div class="text-sm text-[#64748B]">Launch giving campaign</div>
+                            </div>
+                        </button>
+
+                        <button class="w-full flex items-center space-x-3 p-4 bg-[#F8FAFF] hover:bg-[#06B6D4]/10 rounded-xl transition-all">
+                            <div class="w-10 h-10 bg-[#06B6D4]/10 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-receipt text-[#06B6D4]"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="font-medium text-[#0F172A]">Generate Receipts</div>
+                                <div class="text-sm text-[#64748B]">Bulk receipt creation</div>
+                            </div>
+                        </button>
+
+                        <button class="w-full flex items-center space-x-3 p-4 bg-[#F8FAFF] hover:bg-[#16A34A]/10 rounded-xl transition-all">
+                            <div class="w-10 h-10 bg-[#16A34A]/10 rounded-lg flex items-center justify-center">
+                                <i class="fa-solid fa-chart-line text-[#16A34A]"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="font-medium text-[#0F172A]">View Reports</div>
+                                <div class="text-sm text-[#64748B]">Giving analytics</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="pledge-status" class="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(15,23,42,.10)]">
+                    <h3 class="heading text-xl font-semibold text-[#0F172A] mb-6">Pledge Status</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-[#64748B]">On Track</span>
+                            <span class="text-sm font-medium text-[#16A34A]">68%</span>
+                        </div>
+                        <div class="w-full bg-[#E5E7EB] rounded-full h-2">
+                            <div class="bg-[#16A34A] h-2 rounded-full" style="width: 68%"></div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-[#64748B]">At Risk</span>
+                            <span class="text-sm font-medium text-[#F59E0B]">22%</span>
+                        </div>
+                        <div class="w-full bg-[#E5E7EB] rounded-full h-2">
+                            <div class="bg-[#F59E0B] h-2 rounded-full" style="width: 22%"></div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-[#64748B]">Past Due</span>
+                            <span class="text-sm font-medium text-[#EF4444]">10%</span>
+                        </div>
+                        <div class="w-full bg-[#E5E7EB] rounded-full h-2">
+                            <div class="bg-[#EF4444] h-2 rounded-full" style="width: 10%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="top-campaigns" class="bg-white rounded-2xl p-6 shadow-[0_10px_30px_rgba(15,23,42,.10)]">
+                    <h3 class="heading text-xl font-semibold text-[#0F172A] mb-6">Active Campaigns</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 border border-[#E5E7EB] rounded-xl">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-medium text-[#0F172A]">Building Renovation</h4>
+                                <span class="text-sm text-[#16A34A]">82%</span>
+                            </div>
+                            <div class="w-full bg-[#E5E7EB] rounded-full h-2 mb-2">
+                                <div class="bg-[#16A34A] h-2 rounded-full" style="width: 82%"></div>
+                            </div>
+                            <div class="flex justify-between text-sm text-[#64748B]">
+                                <span>$41,000 raised</span>
+                                <span>$50,000 goal</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 border border-[#E5E7EB] rounded-xl">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="font-medium text-[#0F172A]">Youth Mission Trip</h4>
+                                <span class="text-sm text-[#F59E0B]">45%</span>
+                            </div>
+                            <div class="w-full bg-[#E5E7EB] rounded-full h-2 mb-2">
+                                <div class="bg-[#F59E0B] h-2 rounded-full" style="width: 45%"></div>
+                            </div>
+                            <div class="flex justify-between text-sm text-[#64748B]">
+                                <span>$6,750 raised</span>
+                                <span>$15,000 goal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        const user = currentUser.fullName || localStorage.getItem('userName') || 'Admin User';
+        const church = currentUser.churchName || localStorage.getItem('churchName') || 'Grace Community';
+        
+        const userNameEl = document.getElementById('headerUserName');
+        const churchNameEl = document.getElementById('headerChurchName');
+        
+        if (userNameEl) userNameEl.textContent = user;
+        if (churchNameEl) churchNameEl.textContent = church;
+
+        Highcharts.chart('giving-chart', {
+            chart: {
+                type: 'line',
+                backgroundColor: 'transparent'
+            },
+            title: { text: '' },
+            credits: { enabled: false },
+            xAxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                lineColor: '#E5E7EB',
+                tickColor: '#E5E7EB'
+            },
+            yAxis: {
+                title: { text: '' },
+                gridLineColor: '#F1F5F9'
+            },
+            legend: {
+                align: 'right',
+                verticalAlign: 'top'
+            },
+            series: [{
+                name: 'Total Giving',
+                data: [18500, 22300, 19800, 25100, 23400, 27600],
+                color: '#6366F1'
+            }, {
+                name: 'Recurring',
+                data: [12200, 13800, 14500, 15900, 16800, 18200],
+                color: '#16A34A'
+            }]
+        });
+
+        document.querySelectorAll('[data-route], .tile, .card button, .card a.btn').forEach(el => {
+            if (el.dataset.route) {
+                el.addEventListener('click', () => location.href = el.dataset.route);
+                return;
+            }
+            const text = (el.innerText || el.textContent || '').trim().toLowerCase();
+            if (!text) return;
+            const slug = text.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            const base = el.closest('[data-scope="module"]') ? 'modules/' : '';
+            const route = `${base}${slug}.html`;
+            el.addEventListener('click', () => location.href = route);
+            el.style.cursor = 'pointer';
+        });
+    </script>
+</body>
+</html>
